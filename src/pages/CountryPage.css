@@ -1,0 +1,396 @@
+/* ===================== Country Page ===================== */
+.country-page {
+  max-width: 1600px;
+  margin: 0 auto;
+  font-family: "Poppins", sans-serif;
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+}
+
+/* ===================== Hero Section ===================== */
+.country-hero {
+  position: relative;
+  height: 70vh;
+  min-height: 450px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.country-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(26, 26, 46, 0.3) 0%,
+    rgba(26, 26, 46, 0.85) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 40px;
+}
+
+.country-hero-overlay h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 20px;
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.country-hero-desc {
+  font-size: 1.15rem;
+  max-width: 700px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 30px;
+  font-weight: 300;
+}
+
+.country-hero-btn {
+  font-size: 14px;
+  color: #fff;
+  background-color: #22b3c1;
+  border: 1px solid #22b3c1;
+  padding: 12px 30px;
+  display: inline-block;
+  border-radius: 25px;
+  font-weight: 500;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.country-hero-btn:hover {
+  background-color: transparent;
+  color: #22b3c1;
+}
+
+/* ===================== Section Titles ===================== */
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: #22b3c1;
+  margin: 12px auto 0;
+  border-radius: 2px;
+}
+
+/* ===================== General Info ===================== */
+.country-info-section {
+  padding: 60px 40px;
+}
+
+.country-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.country-info-card {
+  background: rgba(30, 30, 46, 0.8);
+  border: 1px solid rgba(42, 157, 244, 0.1);
+  border-radius: 12px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.country-info-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(34, 179, 193, 0.2);
+  border-color: rgba(34, 179, 193, 0.3);
+}
+
+.country-info-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid #22b3c1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.country-info-icon i {
+  font-size: 22px;
+  color: #22b3c1;
+}
+
+.country-info-label {
+  font-size: 13px;
+  color: #afafaf;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.country-info-value {
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* ===================== Attractions ===================== */
+.country-attractions {
+  padding: 60px 40px;
+}
+
+.attractions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.attraction-card {
+  background: rgba(30, 30, 46, 0.8);
+  border: 1px solid rgba(42, 157, 244, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.attraction-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(34, 179, 193, 0.2);
+  border-color: rgba(34, 179, 193, 0.3);
+}
+
+.attraction-img-wrapper {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.attraction-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.attraction-card:hover .attraction-img-wrapper img {
+  transform: scale(1.05);
+}
+
+.attraction-content {
+  padding: 22px;
+}
+
+.attraction-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #22b3c1;
+  margin-bottom: 10px;
+}
+
+.attraction-content p {
+  font-size: 14px;
+  color: #c0c0c0;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+.attraction-btn {
+  font-size: 13px;
+  color: #22b3c1;
+  background-color: transparent;
+  border: 1px solid #22b3c1;
+  padding: 8px 22px;
+  display: inline-block;
+  border-radius: 25px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.attraction-btn:hover {
+  background-color: #22b3c1;
+  color: #fff;
+}
+
+/* ===================== Culture & Traditions ===================== */
+.country-culture {
+  padding: 60px 40px;
+  background: rgba(40, 40, 60, 0.4);
+}
+
+.culture-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.culture-card {
+  background: rgba(30, 30, 46, 0.8);
+  border-left: 4px solid #22b3c1;
+  border-radius: 12px;
+  padding: 28px 24px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.culture-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(34, 179, 193, 0.2);
+  background: rgba(38, 179, 193, 0.1);
+}
+
+.culture-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: rgba(34, 179, 193, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.culture-icon i {
+  font-size: 20px;
+  color: #22b3c1;
+}
+
+.culture-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.culture-card p {
+  font-size: 14px;
+  color: #c0c0c0;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ===================== Responsive ===================== */
+@media (max-width: 1200px) {
+  .country-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .attractions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .country-hero-overlay h1 {
+    font-size: 3rem;
+  }
+
+  .country-info-section,
+  .country-attractions,
+  .country-culture {
+    padding: 50px 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .country-hero {
+    height: 55vh;
+    min-height: 380px;
+  }
+
+  .country-hero-overlay h1 {
+    font-size: 2.4rem;
+  }
+
+  .country-hero-desc {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+
+  .country-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .attractions-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+
+  .culture-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .country-info-section,
+  .country-attractions,
+  .country-culture {
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .country-hero {
+    height: 50vh;
+    min-height: 320px;
+  }
+
+  .country-hero-overlay {
+    padding: 0 20px;
+  }
+
+  .country-hero-overlay h1 {
+    font-size: 2rem;
+  }
+
+  .country-hero-desc {
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+    margin-bottom: 30px;
+  }
+
+  .country-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .country-info-section,
+  .country-attractions,
+  .country-culture {
+    padding: 30px 15px;
+  }
+
+  .attraction-img-wrapper {
+    height: 180px;
+  }
+}

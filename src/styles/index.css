@@ -1,0 +1,578 @@
+/* Основной сброс */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #232223;
+}
+
+/* Section 1 - slider */
+#section-1 {
+  height: 100vh;
+  min-height: 700px;
+  position: relative;
+  color: #fff;
+  background-color: #222;
+}
+
+#section-1 .content-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#section-1 .content-slider .slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#section-1 .content-slider .slider .banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 0;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+#section-1 .content-slider .slider .banner.active {
+  opacity: 1;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.banner-inner-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.banner-inner-wrapper .main-caption {
+  position: absolute;
+  top: 40%;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+.banner-inner-wrapper h2 {
+  font-weight: 500;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.banner-inner-wrapper h1 {
+  font-weight: 700;
+  font-size: 50px;
+  margin-bottom: 30px;
+}
+
+.more-info {
+  position: absolute;
+  bottom: 150px;
+  left: 50%;
+  width: 80%;
+  max-width: 1200px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  padding: 30px 100px;
+  border-radius: 61px;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+.more-info .info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.more-info .info-items {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 30%;
+  gap: 15px;
+  flex: 1;
+}
+
+.more-info .info-item i {
+  font-size: 24px;
+  color: #22b3c1;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #22b3c1;
+  border-radius: 50%;
+  margin-top: 4px;
+}
+
+.more-info h4 {
+  margin: 0;
+  font-size: 20px;
+  color: #22b3c1;
+  line-height: 0.9;
+  font-weight: 700;
+}
+
+.more-info h4 span {
+  display: block;
+  font-size: 14px;
+  color: #888;
+  font-weight: 400;
+  margin-bottom: 2px;
+}
+
+.border-button {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.border-button a {
+  font-size: 14px;
+  color: #22b3c1;
+  background-color: transparent;
+  border: 1px solid #22b3c1;
+  padding: 12px 30px;
+  display: inline-block;
+  border-radius: 25px;
+  font-weight: 500;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.border-button a:hover {
+  background-color: #22b3c1;
+  color: #fff;
+}
+
+.more-info-button a {
+  padding: 10px 20px;
+  background: #22b3c1;
+  color: #fff;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+.more-info-button a:hover {
+  opacity: 0.8;
+}
+
+.more-info-button {
+  margin-left: auto;
+}
+
+.progress-bars {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 10;
+  width: 80%;
+  max-width: 1200px;
+}
+
+.progress-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 10px 5px;
+  border-radius: 5px;
+}
+
+.progress-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.progress-item.active .progress-number {
+  color: #22b3c1;
+  font-weight: 600;
+  transform: scale(1.05);
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #22b3c1;
+  border-radius: 2px;
+  pointer-events: none;
+  transition: width 0.05s linear;
+}
+
+.progress-number {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+
+.progress-item:hover .progress-number {
+  color: white;
+}
+
+.visit-country {
+  margin-top: 120px;
+  margin-left: 250px;
+  margin-right: 250px;
+  color: white;
+}
+
+.eurasian {
+  margin-top: 120px;
+  padding: 0 100px;
+  justify-self: center;
+}
+
+.eurasian .container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 15px;
+  align-items: center;
+}
+
+.eurasian .continent {
+  position: relative;
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-around;
+}
+
+.eurasian .continent:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 100px;
+}
+
+.eurasian .img-continent img {
+  max-width: 270px;
+  width: 100%;
+  height: auto;
+  transition: transform 0.5s ease;
+}
+
+.eurasian .about-continent {
+  flex: 0 0 calc(66.666667% - 30px);
+  max-width: calc(66.666667% - 30px);
+  position: relative;
+  padding: 20px 0;
+}
+
+.eurasian .header-continent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.eurasian .header-continent p {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.eurasian .header-continent a {
+  font-size: 14px;
+  color: #fff;
+  background-color: #22b3c1;
+  border: 1px solid #22b3c1;
+  padding: 12px 30px;
+  display: inline-block;
+  border-radius: 25px;
+  font-weight: 500;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.eurasian .header-continent a:hover {
+  background-color: #fff;
+  color: #22b3c1;
+  border: 1px solid #22b3c1;
+}
+
+.eurasian .description {
+  margin: 18px 0px;
+  font-size: 15px;
+  color: #afafaf;
+}
+
+.eurasian .info {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 15px 0px;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.eurasian .info ul.info {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.eurasian .info li {
+  display: inline-block;
+  width: 32%;
+  color: #afafaf;
+  font-size: 14px;
+}
+
+.eurasian .info li:nth-child(2) {
+  text-align: center;
+}
+
+.eurasian .info li:last-child {
+  text-align: right;
+}
+
+.eurasian .info li i {
+  margin-right: 5px;
+  font-size: 16px;
+  color: #22b3c1;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .more-info {
+    width: 90%;
+    padding: 25px 60px;
+  }
+
+  .visit-country {
+    margin-left: 150px;
+    margin-right: 150px;
+  }
+}
+
+@media (max-width: 992px) {
+  .more-info {
+    bottom: 120px;
+    padding: 20px 40px;
+    border-radius: 40px;
+  }
+
+  .more-info .info-items {
+    padding-right: 20%;
+  }
+
+  .progress-bars {
+    bottom: 70px;
+    gap: 15px;
+  }
+
+  .visit-country {
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+
+  .eurasian {
+    padding: 0 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  #section-1 {
+    min-height: 600px;
+  }
+
+  .banner-inner-wrapper h2 {
+    font-size: 16px;
+  }
+
+  .banner-inner-wrapper h1 {
+    font-size: 36px;
+  }
+
+  .more-info {
+    flex-direction: column;
+    bottom: 100px;
+    padding: 20px;
+    border-radius: 20px;
+    width: 90%;
+  }
+
+  .more-info .info-items {
+    padding-right: 0;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .more-info .info-item {
+    justify-content: center;
+  }
+
+  .more-info-button {
+    margin-left: 0;
+    margin-top: 15px;
+    width: 100%;
+  }
+
+  .more-info-button a {
+    width: 100%;
+    text-align: center;
+  }
+
+  .progress-bars {
+    bottom: 50px;
+    gap: 10px;
+    width: 90%;
+  }
+
+  .progress-number {
+    font-size: 11px;
+  }
+
+  .visit-country {
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 80px;
+  }
+
+  .eurasian {
+    padding: 0 30px;
+    margin-top: 80px;
+  }
+
+  .eurasian .continent {
+    flex-direction: column;
+  }
+
+  .eurasian .img-continent {
+    width: 100%;
+    text-align: center;
+  }
+
+  .eurasian .img-continent img {
+    max-width: 200px;
+  }
+
+  .eurasian .about-continent {
+    flex: 1;
+    max-width: 100%;
+  }
+
+  .eurasian .info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .eurasian .info li {
+    width: 100%;
+    text-align: left !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #section-1 {
+    min-height: 500px;
+  }
+
+  .banner-inner-wrapper h2 {
+    font-size: 14px;
+  }
+
+  .banner-inner-wrapper h1 {
+    font-size: 28px;
+  }
+
+  .more-info {
+    bottom: 80px;
+    padding: 15px;
+  }
+
+  .more-info .info-item i {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .more-info h4 {
+    font-size: 16px;
+  }
+
+  .more-info h4 span {
+    font-size: 12px;
+  }
+
+  .progress-bars {
+    bottom: 30px;
+    gap: 8px;
+  }
+
+  .progress-number {
+    font-size: 9px;
+  }
+
+  .visit-country {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 60px;
+  }
+
+  .eurasian {
+    padding: 0 20px;
+    margin-top: 60px;
+  }
+
+  .eurasian .header-continent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .eurasian .header-continent a {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}

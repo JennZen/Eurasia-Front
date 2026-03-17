@@ -38,34 +38,15 @@ const Europe = () => {
       <div className="europe-content">
         <div className="europe-description">
           <p>
-            Europe is a continent rich in history, culture, and natural beauty.
-            From the Mediterranean coasts to the Nordic fjords, from the
-            Atlantic Ocean to the Ural Mountains, Europe offers an incredible
-            variety of landscapes, languages, and traditions.
+            Europe unfolds as a rich tapestry of culture, history, and terrain —
+            from sunlit coastal towns to mist‑shrouded highlands, from ancient
+            city squares to quiet, winding lanes.
           </p>
           <p>
-            Use our interactive map to explore different countries, learn about
-            their populations, and discover regional groupings. Click on
-            countries to see detailed information and navigate through Europe's
-            diverse nations.
+            Explore the map to move between countries, trace population patterns,
+            and discover the regional character that makes each place distinct.
+            Click any country for a closer look at its story and data.
           </p>
-        </div>
-
-        <div className="europe-features">
-          <div className="feature-card">
-            <h3>🗺️ Interactive Map</h3>
-            <p>
-              Explore countries with clickable regions and detailed information
-            </p>
-          </div>
-          <div className="feature-card">
-            <h3>🔥 Population Heatmap</h3>
-            <p>Visualize population distribution across Europe</p>
-          </div>
-          <div className="feature-card">
-            <h3>🌍 Regional Groupings</h3>
-            <p>Discover how countries are grouped by region</p>
-          </div>
         </div>
       </div>
 

@@ -304,7 +304,7 @@ const EuropeMap = ({ onCountryClick }) => {
             mapContainerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
           }}
         >
-          🔥 Heat
+          Heat
         </button>
         <button
           className={`mode-btn ${colorMode === "region" ? "active" : ""}`}
@@ -313,7 +313,7 @@ const EuropeMap = ({ onCountryClick }) => {
             mapContainerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
           }}
         >
-          🌍 Groups
+          Groups
         </button>
       </div>
 

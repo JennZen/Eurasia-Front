@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Europe from "./pages/Europe";
 import CountryPage from "./pages/CountryPage";
+import About from "./pages/About";
 
 function App() {
   return (
@@ -15,10 +16,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/europe" element={<Europe />} />
             <Route path="/country/:country" element={<CountryPage />} />
-            <Route
-              path="/about"
-              element={<div>About Page (Coming Soon)</div>}
-            />
+            <Route path="/about" element={<About />} />
             <Route
               path="/deals"
               element={<div>Deals Page (Coming Soon)</div>}

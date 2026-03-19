@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { regions, regionColors } from "../data/regions";
+import { asiaRegions, asiaRegionColors } from "../data/asiaRegions";
 
-const EuropeMap = () => {
+const AsiaMap = () => {
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -16,19 +16,19 @@ const EuropeMap = () => {
   const [activeRegionButton, setActiveRegionButton] = useState(null);
 
   const getHeatColor = (pop) => {
-    return pop > 80000000
+    return pop > 500000000
       ? "#800026"
-      : pop > 40000000
+      : pop > 200000000
         ? "#BD0026"
-        : pop > 20000000
+        : pop > 100000000
           ? "#E31A1C"
-          : pop > 10000000
+          : pop > 50000000
             ? "#FC4E2A"
             : "#FD8D3C";
   };
 
   const getRegionByCountry = (name) => {
-    for (const [region, list] of Object.entries(regions)) {
+    for (const [region, list] of Object.entries(asiaRegions)) {
       if (list.some((c) => c.name === name)) return region;
     }
     return null;
@@ -36,11 +36,11 @@ const EuropeMap = () => {
 
   const getRegionColor = (name) => {
     const r = getRegionByCountry(name);
-    return r ? regionColors[r] : "#FEEF70";
+    return r ? asiaRegionColors[r] : "#FEEF70";
   };
 
   const getFlagByCountry = (name) => {
-    for (const list of Object.values(regions)) {
+    for (const list of Object.values(asiaRegions)) {
       const country = list.find((c) => c.name === name);
       if (country) return country.flag;
     }
@@ -65,7 +65,7 @@ const EuropeMap = () => {
     const { NAME, POP2005 } = feature.properties;
     const flag = getFlagByCountry(NAME);
     const region = getRegionByCountry(NAME);
-    const color = regionColors[region] || "#FFD700";
+    const color = asiaRegionColors[region] || "#FFD700";
 
     const newCountry = {
       name: NAME,
@@ -82,33 +82,36 @@ const EuropeMap = () => {
 
   const toggleRegion = (regionName) => {
     setOpenRegions((prev) => {
-      // If clicking the same region again, close it
       if (prev[regionName]) {
         const newState = { ...prev };
         delete newState[regionName];
         return newState;
       }
-      // Otherwise, close all other regions and open this one (exclusive selection)
       return { [regionName]: true };
     });
 
-    // Toggle region button visibility
     setActiveRegionButton((prev) => {
       if (prev === regionName) {
-        // If clicking the same button again, show all buttons
         return null;
       } else {
-        // If clicking a different button, hide all buttons except this one
         return regionName;
       }
     });
+  };
+
+  const regionLabels = {
+    eastern: "East",
+    southeastern: "Southeast",
+    southern: "South",
+    central: "Central",
+    western: "West",
   };
 
   const flyToCountry = (countryName, center) => {
     if (mapInstanceRef.current) {
       mapInstanceRef.current.flyTo(center, 5);
 
-      fetch("/src/data/europe.geojson")
+      fetch("/src/data/asia.geojson")
         .then((r) => r.json())
         .then((data) => {
           const feature = data.features.find(
@@ -139,11 +142,10 @@ const EuropeMap = () => {
       .openOn(mapInstanceRef.current);
   };
 
-
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
-    const map = L.map(mapRef.current).setView([54, 15], 4);
+    const map = L.map(mapRef.current).setView([30, 80], 3);
 
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
@@ -156,8 +158,7 @@ const EuropeMap = () => {
 
     mapInstanceRef.current = map;
 
-    // Load GeoJSON
-    fetch("/src/data/europe.geojson")
+    fetch("/src/data/asia.geojson")
       .then((r) => r.json())
       .then((data) => {
         const geoLayer = L.geoJSON(data, {
@@ -242,7 +243,7 @@ const EuropeMap = () => {
           ))}
         </div>
 
-        <div className="map" ref={mapRef} id="map"></div>
+        <div className="map" ref={mapRef} id="asia-map"></div>
 
         <div className={`map-section ${activeRegionButton ? "has-active-region" : ""}`}>
           {activeRegionButton ? (
@@ -252,9 +253,7 @@ const EuropeMap = () => {
                 className="region-btn region-btn-active"
               >
                 <span className="btn-text">
-                  {activeRegionButton.charAt(0).toUpperCase() +
-                    activeRegionButton.slice(1)}{" "}
-                  Europe
+                  {regionLabels[activeRegionButton]} Asia
                 </span>
                 <i
                   className="fas fa-arrow-up arrow-icon rotated"
@@ -262,7 +261,7 @@ const EuropeMap = () => {
                 ></i>
               </button>
               <div className="region-panel open">
-                {regions[activeRegionButton].map((country) => (
+                {asiaRegions[activeRegionButton].map((country) => (
                   <div
                     key={country.name}
                     className="country-flag"
@@ -277,15 +276,14 @@ const EuropeMap = () => {
               </div>
             </>
           ) : (
-            Object.keys(regions).map((regionKey) => (
+            Object.keys(asiaRegions).map((regionKey) => (
               <button
                 key={regionKey}
                 onClick={() => toggleRegion(regionKey)}
                 className="region-btn"
               >
                 <span className="btn-text">
-                  {regionKey.charAt(0).toUpperCase() + regionKey.slice(1)}{" "}
-                  Europe
+                  {regionLabels[regionKey]} Asia
                 </span>
                 <i
                   className="fas fa-arrow-up arrow-icon"
@@ -323,4 +321,4 @@ const EuropeMap = () => {
   );
 };
 
-export default EuropeMap;
+export default AsiaMap;

@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import Europe from "./pages/Europe";
 import CountryPage from "./pages/CountryPage";
 import About from "./pages/About";
+import Asia from "./pages/Asia";
+import Countries from "./pages/Countries";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/europe" element={<Europe />} />
+            <Route path="/asia" element={<Asia />} />
+            <Route path="/countries" element={<Countries />} />
             <Route path="/country/:country" element={<CountryPage />} />
             <Route path="/about" element={<About />} />
             <Route

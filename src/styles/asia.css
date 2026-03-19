@@ -1,0 +1,26 @@
+/* Asia Page Specific Styles */
+.asia-page {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+#asia-map {
+  height: 500px;
+  width: 700px;
+  max-width: 100%;
+}
+
+/* Responsive adjustments for Asia page */
+@media (max-width: 768px) {
+  #asia-map {
+    width: 100%;
+    height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  #asia-map {
+    height: 300px;
+  }
+}

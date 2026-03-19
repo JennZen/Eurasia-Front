@@ -24,7 +24,8 @@ const Footer = () => {
           <ul>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/europe">Europe</Link></li>
-            <li><Link to="/country">Countries</Link></li>
+            <li><Link to="/asia">Asia</Link></li>
+            <li><Link to="/countries">Countries</Link></li>
             <li><Link to="/about">About</Link></li>
           </ul>
         </div>

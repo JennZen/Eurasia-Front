@@ -7,7 +7,7 @@ export const banners = [
     population: "44.48 M",
     territory: "275.400 KM²",
     avgPrice: "$946.000",
-    link: "/about",
+    link: "/country/caribbean",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ export const banners = [
     population: "8.66 M",
     territory: "41.290 KM²",
     avgPrice: "$1.100.200",
-    link: "/about",
+    link: "/country/switzerland",
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ export const banners = [
     population: "67.41 M",
     territory: "551.500 KM²",
     avgPrice: "$425.600",
-    link: "/about",
+    link: "/country/france",
   },
   {
     id: 4,
@@ -37,6 +37,6 @@ export const banners = [
     population: "69.86 M",
     territory: "513.120 KM²",
     avgPrice: "$165.450",
-    link: "/about",
+    link: "/country/thailand",
   },
 ];

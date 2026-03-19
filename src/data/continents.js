@@ -19,6 +19,6 @@ export const continents = [
     population: "8.66 Mil People",
     territory: "41.290 km²",
     avgPrice: "$1.100.200",
-    link: "/about",
+    link: "/asia",
   },
 ];

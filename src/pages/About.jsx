@@ -10,20 +10,23 @@ const About = () => {
           <h1 className="about-title">About Project Eurasia</h1>
           <div className="about-text">
             <p>
-              Cras porttitor, elit ac varius varius, lectus ipsum rutrum odio,
-              nec aliquet felis ipsum sed est. Fusce in tortor ultricies,
-              scelerisque nibh sit amet, tristique lectus. Vestibulum ante ipsum
-              primis in faucibus orci luctus et ultrices posuere cubilia curae.
+              Discover the vast diversity of Eurasia through our comprehensive digital
+              platform. Our site offers detailed information on every country across
+              the continent, featuring high-quality imagery of iconic landmarks and
+              up-to-the-minute news. Explore cultural heritage and geographical data 
+              all in one centralized location designed for modern explorers.
             </p>
             <p>
-              Integer ut turpis at lectus gravida aliquet. Donec elementum risus
-              in arcu posuere, vitae luctus mauris ultrices. Mauris vel
-              porttitor lacus, sed elementum felis.
+              Navigate the world's largest landmass with ease using our specialized
+              interactive maps for both Europe and Asia. These tools allow you to
+              visualize exact locations, borders, and regions, providing a dynamic
+              way to study the geography of these two historic continents.
             </p>
             <p>
-              In euismod, nisi a feugiat laoreet, felis nunc varius augue, nec
-              porta velit purus in augue. Sed in purus nec tellus pulvinar
-              feugiat et ac erat.
+              Whether you are tracking the latest regional updates or planning a 
+              virtual tour of famous attractions, our resources bridge the gap 
+              between information and inspiration. Start your journey today and 
+              uncover the unique stories that define the Eurasian landscape.
             </p>
           </div>
         </div>

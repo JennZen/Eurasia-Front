@@ -1,5 +1,6 @@
 import BannerSlider from "../components/BannerSlider";
 import ContinentSection from "../components/ContinentSection";
+import LatestNews from "../components/LatestNews";
 import "../styles/index.css";
 
 const Home = () => {
@@ -20,6 +21,7 @@ const Home = () => {
         </div>
       </div>
       <ContinentSection />
+      <LatestNews />
     </>
   );
 };

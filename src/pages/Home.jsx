@@ -12,9 +12,9 @@ const Home = () => {
           <div className="row">
             <div className="section-heading">
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                Explore the Wonders of Europe and Asia
                 <br />
-                eiusmod tempor incididunt ut labore.
+                Master Geography with us!
               </p>
             </div>
           </div>

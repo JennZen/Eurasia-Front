@@ -4,7 +4,7 @@ export const continents = [
     name: "Europe",
     image: "/images/Europe_on_the_globe_(red).png",
     description:
-      "Woox Travel is a professional Bootstrap 5 theme HTML CSS layout for your website. You can use this layout for your commercial work.",
+      "Unlock a deeper understanding of Europe with our high-resolution interactive map. Seamlessly toggle through mysterious regions and historical territories to see the continent’s geography in vivid detail.",
     population: "8.66 Mil People",
     territory: "41.290 km²",
     avgPrice: "$1.100.200",
@@ -15,7 +15,7 @@ export const continents = [
     name: "Asia",
     image: "/images/Asia_on_the_globe_(red).svg",
     description:
-      "Woox Travel is a professional Bootstrap 5 theme HTML CSS layout for your website. You can use this layout for your commercial work.",
+      "Immerse yourself in a comprehensive digital atlas of the Asian continent. Every detail is meticulously mapped, allowing you to discover the fascinating diversity and scale of Asia’s most iconic landmasses.",
     population: "8.66 Mil People",
     territory: "41.290 km²",
     avgPrice: "$1.100.200",

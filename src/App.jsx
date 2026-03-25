@@ -7,6 +7,7 @@ import CountryPage from "./pages/CountryPage";
 import About from "./pages/About";
 import Asia from "./pages/Asia";
 import Countries from "./pages/Countries";
+import LatestNewsPage from "./pages/LatestNewsPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/asia" element={<Asia />} />
             <Route path="/countries" element={<Countries />} />
             <Route path="/country/:country" element={<CountryPage />} />
+            <Route path="/latest-news" element={<LatestNewsPage />} />
             <Route path="/about" element={<About />} />
             <Route
               path="/deals"

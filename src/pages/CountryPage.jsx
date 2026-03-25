@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./CountryPage.css";
 
 const CountryPage = () => {
@@ -181,12 +182,13 @@ const CountryPage = () => {
               <div className="news-content">
                 <h3>{newsItem.title}</h3>
                 <p>{newsItem.excerpt}</p>
-                <a
-                  href="#"
+                <Link
+                  to="/latest-news"
+                  state={{ source: "country", selectedNewsId: newsItem.id }}
                   className="attraction-btn"
                 >
                   Learn More
-                </a>
+                </Link>
               </div>
             </div>
           ))}

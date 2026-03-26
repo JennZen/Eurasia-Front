@@ -44,6 +44,42 @@ const latestNewsData = [
     tag: "Guides",
     detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >Hidden Gems in Eastern Europe</h2></strong><br><br>Eastern Europe is home to numerous underrated destinations that provide authentic cultural experiences without the tourist crowds. From charming villages to pristine coastlines, these spots offer a glimpse into local life.</p><p class=\"bb_paragraph\" ><br>Highlights include the Carpathian Mountains in Romania, the lakes of Slovenia, and historic towns in Bulgaria. Travelers seeking off-the-beaten-path adventures will find these locations ideal.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Top Picks</strong></h2><br><strong>Nature and Outdoors:</strong><br><br>● Bled, Slovenia: Lake and castle views.<br>● Transfăgărășan Highway, Romania.<br><br><strong>Cultural Sites:</strong><br><br>● Plovdiv, Bulgaria: Ancient theaters.<br>● Riga, Latvia: Art Nouveau architecture.</p><p class=\"bb_paragraph\" ></p>",
   },
+  {
+    id: 6,
+    title: "Silk Road heritage sites receive UNESCO restoration funding",
+    description: "A major UNESCO grant will fund the restoration of ancient Silk Road landmarks across Central Asia and the Middle East.",
+    image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=400&q=80",
+    time: "1 day ago",
+    tag: "Culture",
+    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >Silk Road Sites: UNESCO Restoration</h2></strong><br><br>UNESCO has announced a $50 million grant to restore and preserve key Silk Road heritage sites across Uzbekistan, Iran, and Turkey. The initiative aims to protect ancient caravanserais, mosques, and trading posts that date back centuries.</p><p class=\"bb_paragraph\" ><br>The project will involve local artisans and archaeologists, ensuring that restoration techniques remain authentic. Sites in Samarkand, Isfahan, and Cappadocia are among the first to benefit.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Key Details</strong></h2><br><strong>Sites Included:</strong><br><br>● Registan Square, Samarkand.<br>● Naqsh-e Jahan Square, Isfahan.<br><br><strong>Goals:</strong><br><br>● Preserve architectural heritage.<br>● Boost cultural tourism in the region.</p><p class=\"bb_paragraph\" ></p>",
+  },
+  {
+    id: 7,
+    title: "South Korea launches digital nomad visa for remote workers",
+    description: "The new visa program allows foreign professionals to live and work remotely in South Korea for up to two years.",
+    image: "https://images.unsplash.com/photo-1517154421773-0529f29ea451?w=400&q=80",
+    time: "2 days ago",
+    tag: "Asia",
+    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >South Korea: Digital Nomad Visa</h2></strong><br><br>South Korea has officially launched its Digital Nomad Visa, allowing remote workers from around the world to live in the country for up to two years. The visa targets freelancers, entrepreneurs, and employees of foreign companies who can work remotely.</p><p class=\"bb_paragraph\" ><br>Applicants must demonstrate a minimum annual income and proof of remote employment. Popular cities for digital nomads include Seoul, Busan, and Jeju Island, known for their fast internet, coworking spaces, and vibrant culture.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Requirements</strong></h2><br><strong>Eligibility:</strong><br><br>● Proof of remote employment or freelance work.<br>● Minimum income threshold.<br><br><strong>Benefits:</strong><br><br>● Access to national health insurance.<br>● Tax incentives for the first year.</p><p class=\"bb_paragraph\" ></p>",
+  },
+  {
+    id: 8,
+    title: "India's high-speed rail network expands to 5 new cities",
+    description: "The Vande Bharat Express now connects Mumbai, Chennai, and three other cities with fast, modern rail service.",
+    image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80",
+    time: "2 days ago",
+    tag: "Asia",
+    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >India's Rail Revolution: 5 New Cities</h2></strong><br><br>India's high-speed Vande Bharat Express has expanded its network to include five additional cities, significantly improving intercity connectivity. The new routes link Mumbai to Pune, Chennai to Bengaluru, and more.</p><p class=\"bb_paragraph\" ><br>The expansion is part of the Indian government's plan to modernize the rail network. Trains feature comfortable seating, onboard Wi-Fi, and speeds of up to 180 km/h.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>New Routes</strong></h2><br><strong>Connections:</strong><br><br>● Mumbai–Pune: 2 hours.<br>● Chennai–Bengaluru: 3.5 hours.<br><br><strong>Features:</strong><br><br>● Modern coaches with Wi-Fi.<br>● Affordable pricing for all classes.</p><p class=\"bb_paragraph\" ></p>",
+  },
+  {
+    id: 9,
+    title: "Norway opens the world's longest underwater tunnel for traffic",
+    description: "The 27 km Rogfast tunnel beneath the Boknafjorden connects southern and western Norway year-round.",
+    image: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=400&q=80",
+    time: "3 days ago",
+    tag: "Europe",
+    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >Rogfast Tunnel: Engineering Marvel</h2></strong><br><br>Norway has opened the Rogfast tunnel, the world's longest underwater road tunnel at 27 kilometres. The tunnel runs beneath the Boknafjorden and connects Randaberg to Bokn, eliminating the need for ferry crossings.</p><p class=\"bb_paragraph\" ><br>Construction took over a decade and cost approximately $2 billion. The tunnel reaches a depth of 392 meters below sea level, making it the deepest subsea tunnel as well.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Facts</strong></h2><br><strong>Engineering:</strong><br><br>● 27 km long, 392 m deep.<br>● Two lanes in each direction.<br><br><strong>Impact:</strong><br><br>● Year-round road connection.<br>● Reduced travel time by 40 minutes.</p><p class=\"bb_paragraph\" ></p>",
+  },
 ];
 
 export default latestNewsData;

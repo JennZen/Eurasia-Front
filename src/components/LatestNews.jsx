@@ -5,7 +5,7 @@ import newsData from "../data/latestNewsData";
 const LatestNews = () => {
   const featured = newsData[0];
   const sideNews = newsData.slice(1, 4);
-  const bottomNews = newsData.slice(4, 7);
+  const bottomNews = newsData.slice(4, 9);
 
   const baseState = { source: "home" };
 

@@ -34,6 +34,11 @@ export const asiaRegions = {
       flag: "//upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Flag_of_Mongolia.svg/100px-Flag_of_Mongolia.svg.png",
     },
     {
+      name: "Taiwan",
+      center: [23.5, 121],
+      flag: "//upload.wikimedia.org/wikipedia/commons/thumb/7/72/Flag_of_the_Republic_of_China.svg/100px-Flag_of_the_Republic_of_China.svg.png",
+    },
+    {
       name: "Russia",
       center: [62, 100],
       flag: "//upload.wikimedia.org/wikipedia/en/thumb/f/f3/Flag_of_Russia.svg/100px-Flag_of_Russia.svg.png",
@@ -121,6 +126,11 @@ export const asiaRegions = {
       name: "Bhutan",
       center: [27.5, 90.5],
       flag: "//upload.wikimedia.org/wikipedia/commons/thumb/9/91/Flag_of_Bhutan.svg/100px-Flag_of_Bhutan.svg.png",
+    },
+    {
+      name: "Afghanistan",
+      center: [33, 65],
+      flag: "//upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_the_Taliban.svg/100px-Flag_of_the_Taliban.svg.png",
     },
   ],
   central: [

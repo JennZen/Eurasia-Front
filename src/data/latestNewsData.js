@@ -3,82 +3,207 @@ const latestNewsData = [
     id: 1,
     title: "New direct flights connect Europe and Central Asia",
     description: "Several airlines announced new routes linking major European cities with destinations across Central Asia, making travel more accessible than ever.",
-    image: "https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=800&q=80",
+    image: "https://i.abcnewsfe.com/a/29ad17e0-4dec-488a-9c27-bdc2424ba5a5/electric-plane-ht-ml-240110_1704902584341_hpMain_16x9.jpg?w=992",
     time: "2 hrs ago",
     tag: "Travel",
-    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >New Direct Flights: Europe Meets Central Asia</h2></strong><br><br>Several major airlines have launched new direct flight routes connecting European hubs like Frankfurt and London with key Central Asian cities such as Astana, Tashkent, and Bishkek. This development is expected to boost tourism and business travel in the region.</p><p class=\"bb_paragraph\" ><br>The new routes reduce travel time significantly, eliminating the need for layovers in Moscow or Istanbul. Airlines involved include Lufthansa, British Airways, and local carriers like Air Astana.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Benefits</strong></h2><br><strong>Economic Impact:</strong><br><br>● Increased tourism revenue for Central Asian countries.<br>● Easier access for European businesses.<br><br><strong>Travel Convenience:</strong><br><br>● Shorter flight durations.<br>● More affordable fares due to competition.</p><p class=\"bb_paragraph\" ></p>",
+    detailed_description: `
+<p class="bb_paragraph">
+<strong><h2 class="bb_tag">New Direct Flights: Europe Meets Central Asia</h2></strong><br><br>
+Several major airlines have launched new direct flight routes connecting European hubs such as Frankfurt, London, and Paris with key Central Asian cities including Astana, Tashkent, and Bishkek. Aviation experts describe the move as one of the most significant connectivity expansions between the two regions in over a decade, opening new opportunities for tourism, trade, and cultural exchange.
+</p>
+
+<p class="bb_paragraph">
+The new routes dramatically reduce travel time by eliminating traditional layovers that previously required passengers to transit through Moscow or Istanbul. Travelers can now reach Central Asia faster and more comfortably, encouraging both leisure travel and business cooperation. Airlines involved in the initiative include Lufthansa, British Airways, and regional carriers such as Air Astana, all investing heavily in expanding passenger capacity.
+</p>
+
+<p class="bb_paragraph">
+Industry analysts expect the routes to reshape tourism patterns, allowing European travelers easier access to Silk Road destinations, mountain landscapes, and emerging urban centers. Local governments anticipate increased hotel development, infrastructure investment, and cross-border partnerships as international arrivals continue to grow throughout 2026 and beyond.
+</p>
+`,
   },
+
   {
     id: 2,
     title: "Japan sees record tourism numbers in early 2026",
     description: "Visitor arrivals to Japan surpass expectations as cherry blossom season draws millions of travellers.",
-    image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80",
+    image: "https://thetraveler.s3.amazonaws.com/images/hero/japan-cherry-blossom-boom-2026-sakura-travel.jpg_1200x675.jpg",
     time: "5 hrs ago",
     tag: "Asia",
-    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >Record Tourism in Japan: Cherry Blossom Boom</h2></strong><br><br>Japan has reported record-breaking visitor numbers in the first quarter of 2026, with over 10 million international tourists arriving, far exceeding pre-pandemic levels. The cherry blossom season has been a major draw, attracting crowds from around the world.</p><p class=\"bb_paragraph\" ><br>The surge is attributed to eased travel restrictions, new direct flights, and promotional campaigns by the Japanese government. Popular destinations include Tokyo, Kyoto, and Hiroshima.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Highlights</strong></h2><br><strong>Seasonal Attractions:</strong><br><br>● Hanami festivals in parks.<br>● Cultural experiences in temples.<br><br><strong>Economic Boost:</strong><br><br>● Increased spending on accommodations and souvenirs.<br>● Job creation in tourism sector.</p><p class=\"bb_paragraph\" ></p>",
+    detailed_description: `
+<p class="bb_paragraph">
+<strong><h2 class="bb_tag">Record Tourism in Japan: Cherry Blossom Boom</h2></strong><br><br>
+Japan has reported record-breaking tourism numbers during the first quarter of 2026, welcoming more than ten million international visitors. The surge coincides with the iconic cherry blossom season, which continues to attract travelers seeking cultural experiences, seasonal festivals, and scenic landscapes across the country.
+</p>
+
+<p class="bb_paragraph">
+Cities such as Tokyo, Kyoto, and Osaka experienced unprecedented hotel occupancy rates, while regional destinations also benefited from increased visitor flows. Government tourism campaigns, simplified visa procedures, and expanded airline capacity have contributed significantly to the renewed global interest in Japan as a top travel destination.
+</p>
+
+<p class="bb_paragraph">
+Economists note that tourism spending has boosted local businesses ranging from traditional ryokan inns to modern retail districts. Cultural institutions and heritage sites have also introduced crowd-management strategies to balance visitor growth with preservation efforts, ensuring sustainable tourism development for future seasons.
+</p>
+`,
   },
+
   {
     id: 3,
     title: "European rail passes now cover 35 countries",
     description: "Expanded coverage makes cross-border train travel easier for tourists exploring the continent.",
-    image: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&q=80",
+    image: "https://www.eurail.com/content/dam/_new-structure/visual/maps/globalpass_map.jpg",
     time: "8 hrs ago",
     tag: "Europe",
-    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >Expanded Eurail Passes: 35 Countries Covered</h2></strong><br><br>The Eurail Global Pass has been updated to include 35 European countries, providing seamless train travel across the continent. This expansion includes new routes in Eastern Europe and improved connections to Scandinavia.</p><p class=\"bb_paragraph\" ><br>Travelers can now explore from Portugal to Russia with a single pass, making it ideal for backpackers and families. The pass offers flexible options for 5 to 31 days of unlimited travel.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Advantages</strong></h2><br><strong>Flexibility:</strong><br><br>● Choose your travel days.<br>● Access to high-speed trains.<br><br><strong>Coverage:</strong><br><br>● Scenic routes through mountains and coasts.<br>● Urban exploration in major cities.</p><p class=\"bb_paragraph\" ></p>",
+    detailed_description: `
+<p class="bb_paragraph">
+<strong><h2 class="bb_tag">Expanded Eurail Passes: 35 Countries Covered</h2></strong><br><br>
+The Eurail Global Pass has expanded its coverage to include 35 European countries, marking a milestone in cross-border rail travel accessibility. The update introduces new routes across Eastern Europe while strengthening links between major Western European transport hubs and Scandinavian destinations.
+</p>
+
+<p class="bb_paragraph">
+Travelers can now move seamlessly across the continent using a single ticket, enabling flexible travel itineraries that span multiple cultures and landscapes. Rail operators have coordinated schedules and reservation systems to simplify international journeys, making train travel increasingly competitive with short-haul flights.
+</p>
+
+<p class="bb_paragraph">
+Tourism experts believe the expansion will encourage slower, more sustainable travel experiences, allowing visitors to explore smaller cities and rural regions often overlooked by traditional tourism routes. The initiative aligns with Europe’s broader strategy to promote environmentally friendly transportation options.
+</p>
+`,
   },
+
   {
     id: 4,
     title: "Sustainable tourism initiatives gain momentum across Eurasia",
     description: "Governments and organizations push for eco-friendly travel practices throughout the region.",
-    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&q=80",
+    image: "https://sb.ecobnb.net/app/uploads/sites/3/2025/05/The-Rise-of-Green-Tourism-How-Travelers-Are-Redefining-Sustainability.png",
     time: "12 hrs ago",
     tag: "Sustainability",
-    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >Sustainable Tourism: Greening Eurasia</h2></strong><br><br>Eurasian countries are ramping up efforts to promote sustainable tourism, with initiatives focusing on reducing carbon footprints, preserving natural sites, and supporting local communities. Programs include eco-lodges, green certifications, and wildlife conservation.</p><p class=\"bb_paragraph\" ><br>Organizations like the UNWTO and local NGOs are collaborating to implement these practices. Destinations like the Altai Mountains and the Caspian Sea are leading examples.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Initiatives</strong></h2><br><strong>Environmental Focus:</strong><br><br>● Carbon-neutral travel options.<br>● Waste reduction in tourist areas.<br><br><strong>Community Support:</strong><br><br>● Local employment in eco-tourism.<br>● Cultural preservation programs.</p><p class=\"bb_paragraph\" ></p>",
+    detailed_description: `
+<p class="bb_paragraph">
+<strong><h2 class="bb_tag">Sustainable Tourism: Greening Eurasia</h2></strong><br><br>
+Countries across Eurasia are accelerating efforts to promote sustainable tourism as environmental awareness reshapes global travel trends. Governments and international organizations are introducing eco-certification programs, renewable energy initiatives, and conservation-focused tourism models aimed at protecting natural ecosystems.
+</p>
+
+<p class="bb_paragraph">
+Destinations such as the Altai Mountains and coastal regions around the Caspian Sea have become testing grounds for environmentally responsible travel infrastructure. Eco-lodges, guided conservation tours, and community-led cultural experiences are helping travelers engage with destinations while minimizing environmental impact.
+</p>
+
+<p class="bb_paragraph">
+Experts emphasize that sustainable tourism not only protects biodiversity but also strengthens local economies by empowering communities and preserving cultural traditions. Collaborative projects between NGOs, tourism boards, and private operators are expected to expand significantly over the coming years.
+</p>
+`,
   },
+
   {
     id: 5,
     title: "Hidden gems: 10 underrated destinations in Eastern Europe",
     description: "From mountain villages to coastal towns, these spots offer authentic experiences away from crowds.",
-    image: "https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=400&q=80",
+    image: "https://scratchyourmapa.com/wp-content/uploads/2022/12/Lukomir.jpg",
     time: "1 day ago",
     tag: "Guides",
-    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >Hidden Gems in Eastern Europe</h2></strong><br><br>Eastern Europe is home to numerous underrated destinations that provide authentic cultural experiences without the tourist crowds. From charming villages to pristine coastlines, these spots offer a glimpse into local life.</p><p class=\"bb_paragraph\" ><br>Highlights include the Carpathian Mountains in Romania, the lakes of Slovenia, and historic towns in Bulgaria. Travelers seeking off-the-beaten-path adventures will find these locations ideal.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Top Picks</strong></h2><br><strong>Nature and Outdoors:</strong><br><br>● Bled, Slovenia: Lake and castle views.<br>● Transfăgărășan Highway, Romania.<br><br><strong>Cultural Sites:</strong><br><br>● Plovdiv, Bulgaria: Ancient theaters.<br>● Riga, Latvia: Art Nouveau architecture.</p><p class=\"bb_paragraph\" ></p>",
+    detailed_description: `
+<p class="bb_paragraph">
+<strong><h2 class="bb_tag">Hidden Gems in Eastern Europe</h2></strong><br><br>
+Eastern Europe continues to reveal a diverse collection of lesser-known destinations that offer authentic travel experiences beyond crowded tourist hotspots. From remote mountain settlements to historic coastal towns, travelers are increasingly seeking meaningful cultural immersion rather than traditional sightseeing routes.
+</p>
+
+<p class="bb_paragraph">
+Regions in Romania, Slovenia, and Bulgaria have gained attention for their preserved traditions, local cuisine, and dramatic natural scenery. Small communities are embracing tourism carefully, balancing visitor interest with efforts to maintain their heritage and lifestyle.
+</p>
+
+<p class="bb_paragraph">
+Travel specialists highlight that these emerging destinations appeal particularly to independent travelers looking for slower journeys, local interaction, and unique storytelling opportunities. As awareness grows through social media and travel journalism, Eastern Europe is becoming a focal point for experiential tourism.
+</p>
+`,
   },
+
   {
     id: 6,
     title: "Silk Road heritage sites receive UNESCO restoration funding",
     description: "A major UNESCO grant will fund the restoration of ancient Silk Road landmarks across Central Asia and the Middle East.",
-    image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=400&q=80",
+    image: "https://static.wixstatic.com/media/d40bae_3cbc32e4a14e4a6eb4b76e406eebf127~mv2.jpg/v1/fill/w_1000,h_563,al_c,q_85,usm_0.66_1.00_0.01/d40bae_3cbc32e4a14e4a6eb4b76e406eebf127~mv2.jpg",
     time: "1 day ago",
     tag: "Culture",
-    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >Silk Road Sites: UNESCO Restoration</h2></strong><br><br>UNESCO has announced a $50 million grant to restore and preserve key Silk Road heritage sites across Uzbekistan, Iran, and Turkey. The initiative aims to protect ancient caravanserais, mosques, and trading posts that date back centuries.</p><p class=\"bb_paragraph\" ><br>The project will involve local artisans and archaeologists, ensuring that restoration techniques remain authentic. Sites in Samarkand, Isfahan, and Cappadocia are among the first to benefit.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Key Details</strong></h2><br><strong>Sites Included:</strong><br><br>● Registan Square, Samarkand.<br>● Naqsh-e Jahan Square, Isfahan.<br><br><strong>Goals:</strong><br><br>● Preserve architectural heritage.<br>● Boost cultural tourism in the region.</p><p class=\"bb_paragraph\" ></p>",
+    detailed_description: `
+<p class="bb_paragraph">
+<strong><h2 class="bb_tag">Silk Road Sites: UNESCO Restoration</h2></strong><br><br>
+UNESCO has announced a large-scale restoration initiative aimed at preserving key Silk Road heritage sites across Central Asia and the Middle East. The program focuses on protecting architectural landmarks that once served as vital trading hubs connecting civilizations across continents.
+</p>
+
+<p class="bb_paragraph">
+The restoration effort will involve historians, archaeologists, and local craftsmen working together to ensure authenticity in reconstruction techniques. Cities such as Samarkand and Isfahan are expected to see renewed international attention as conservation work progresses.
+</p>
+
+<p class="bb_paragraph">
+Cultural experts believe the initiative will strengthen educational tourism while safeguarding historical identity. By restoring these landmarks, UNESCO aims to promote global appreciation for shared heritage and encourage sustainable cultural tourism development.
+</p>
+`,
   },
+
   {
     id: 7,
     title: "South Korea launches digital nomad visa for remote workers",
     description: "The new visa program allows foreign professionals to live and work remotely in South Korea for up to two years.",
-    image: "https://images.unsplash.com/photo-1517154421773-0529f29ea451?w=400&q=80",
+    image: "https://images.euronews.com/articles/stories/08/13/00/94/1536x864_cmsv2_e0e7b1f9-5bba-5df0-bc57-ceee80b44a93-8130094.jpg",
     time: "2 days ago",
     tag: "Asia",
-    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >South Korea: Digital Nomad Visa</h2></strong><br><br>South Korea has officially launched its Digital Nomad Visa, allowing remote workers from around the world to live in the country for up to two years. The visa targets freelancers, entrepreneurs, and employees of foreign companies who can work remotely.</p><p class=\"bb_paragraph\" ><br>Applicants must demonstrate a minimum annual income and proof of remote employment. Popular cities for digital nomads include Seoul, Busan, and Jeju Island, known for their fast internet, coworking spaces, and vibrant culture.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Requirements</strong></h2><br><strong>Eligibility:</strong><br><br>● Proof of remote employment or freelance work.<br>● Minimum income threshold.<br><br><strong>Benefits:</strong><br><br>● Access to national health insurance.<br>● Tax incentives for the first year.</p><p class=\"bb_paragraph\" ></p>",
+    detailed_description: `
+<p class="bb_paragraph">
+<strong><h2 class="bb_tag">South Korea: Digital Nomad Visa</h2></strong><br><br>
+South Korea has introduced a Digital Nomad Visa designed to attract remote professionals seeking long-term international living opportunities. The program allows qualified applicants to reside in the country while continuing employment with overseas companies.
+</p>
+
+<p class="bb_paragraph">
+Officials expect the initiative to stimulate innovation and cultural exchange by welcoming entrepreneurs, freelancers, and technology professionals into the local economy. Cities such as Seoul and Busan are preparing expanded coworking spaces and digital infrastructure to support incoming residents.
+</p>
+
+<p class="bb_paragraph">
+Analysts note that the visa reflects a broader global trend as countries compete to attract highly mobile talent. South Korea’s combination of advanced technology, safety, and cultural appeal positions it as a leading destination for remote workers worldwide.
+</p>
+`,
   },
+
   {
     id: 8,
     title: "India's high-speed rail network expands to 5 new cities",
     description: "The Vande Bharat Express now connects Mumbai, Chennai, and three other cities with fast, modern rail service.",
-    image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80",
+    image: "https://media.cnn.com/api/v1/images/stellar/prod/220221223627-01-india-trains-file.jpg?q=w_1110,c_fill",
     time: "2 days ago",
     tag: "Asia",
-    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >India's Rail Revolution: 5 New Cities</h2></strong><br><br>India's high-speed Vande Bharat Express has expanded its network to include five additional cities, significantly improving intercity connectivity. The new routes link Mumbai to Pune, Chennai to Bengaluru, and more.</p><p class=\"bb_paragraph\" ><br>The expansion is part of the Indian government's plan to modernize the rail network. Trains feature comfortable seating, onboard Wi-Fi, and speeds of up to 180 km/h.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>New Routes</strong></h2><br><strong>Connections:</strong><br><br>● Mumbai–Pune: 2 hours.<br>● Chennai–Bengaluru: 3.5 hours.<br><br><strong>Features:</strong><br><br>● Modern coaches with Wi-Fi.<br>● Affordable pricing for all classes.</p><p class=\"bb_paragraph\" ></p>",
+    detailed_description: `
+<p class="bb_paragraph">
+<strong><h2 class="bb_tag">India's Rail Revolution: Network Expansion</h2></strong><br><br>
+India continues its ambitious railway modernization program with the expansion of the Vande Bharat Express network to five additional cities. The development represents a major step toward improving intercity mobility across one of the world’s largest rail systems.
+</p>
+
+<p class="bb_paragraph">
+New high-speed routes are reducing travel times between economic centers while offering passengers modern amenities such as upgraded seating and onboard connectivity. The initiative aims to shift more travelers toward rail transport as a faster and environmentally efficient alternative.
+</p>
+
+<p class="bb_paragraph">
+Transportation planners emphasize that the expansion will support regional economic growth by improving accessibility between business hubs and emerging urban areas, strengthening domestic tourism and commercial exchange.
+</p>
+`,
   },
+
   {
     id: 9,
     title: "Norway opens the world's longest underwater tunnel for traffic",
     description: "The 27 km Rogfast tunnel beneath the Boknafjorden connects southern and western Norway year-round.",
-    image: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=400&q=80",
+    image: "https://curlytales.com/wp-content/uploads/2024/12/Rogfast-Tunnel-1280x720.jpg",
     time: "3 days ago",
     tag: "Europe",
-    detailed_description: "<p class=\"bb_paragraph\" ><br><strong><h2 class=\"bb_tag\" >Rogfast Tunnel: Engineering Marvel</h2></strong><br><br>Norway has opened the Rogfast tunnel, the world's longest underwater road tunnel at 27 kilometres. The tunnel runs beneath the Boknafjorden and connects Randaberg to Bokn, eliminating the need for ferry crossings.</p><p class=\"bb_paragraph\" ><br>Construction took over a decade and cost approximately $2 billion. The tunnel reaches a depth of 392 meters below sea level, making it the deepest subsea tunnel as well.</p><p class=\"bb_paragraph\" ><h2 class=\"bb_tag\" ><strong>Facts</strong></h2><br><strong>Engineering:</strong><br><br>● 27 km long, 392 m deep.<br>● Two lanes in each direction.<br><br><strong>Impact:</strong><br><br>● Year-round road connection.<br>● Reduced travel time by 40 minutes.</p><p class=\"bb_paragraph\" ></p>",
+    detailed_description: `
+<p class="bb_paragraph">
+<strong><h2 class="bb_tag">Rogfast Tunnel: Engineering Marvel Beneath the Sea</h2></strong><br><br>
+Norway has officially opened the Rogfast tunnel, now recognized as the longest and deepest underwater road tunnel in the world. Stretching beneath the Boknafjorden, the project connects regions previously separated by ferry routes, enabling uninterrupted year-round travel.
+</p>
+
+<p class="bb_paragraph">
+Construction required advanced engineering solutions to address extreme underwater pressure and geological challenges. The tunnel significantly improves transportation efficiency while strengthening regional economic integration along Norway’s western coastline.
+</p>
+
+<p class="bb_paragraph">
+Infrastructure specialists view Rogfast as a landmark achievement demonstrating how modern engineering can overcome natural barriers. The project is expected to reduce travel times, enhance logistics networks, and support long-term regional development.
+</p>
+`,
   },
 ];
 

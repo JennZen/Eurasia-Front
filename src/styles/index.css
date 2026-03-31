@@ -254,9 +254,12 @@ body {
 
 .visit-country {
   margin-top: 120px;
-  margin-left: 250px;
-  margin-right: 250px;
+  padding: 0 20px;
   color: white;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .eurasian {
@@ -389,8 +392,7 @@ body {
   }
 
   .visit-country {
-    margin-left: 150px;
-    margin-right: 150px;
+    padding: 0 20px;
   }
 }
 
@@ -411,8 +413,7 @@ body {
   }
 
   .visit-country {
-    margin-left: 100px;
-    margin-right: 100px;
+    padding: 0 20px;
   }
 
   .eurasian {
@@ -474,8 +475,7 @@ body {
   }
 
   .visit-country {
-    margin-left: 50px;
-    margin-right: 50px;
+    padding: 0 16px;
     margin-top: 80px;
   }
 
@@ -555,8 +555,7 @@ body {
   }
 
   .visit-country {
-    margin-left: 20px;
-    margin-right: 20px;
+    padding: 0 12px;
     margin-top: 60px;
   }
 

@@ -8,6 +8,9 @@ import About from "./pages/About";
 import Asia from "./pages/Asia";
 import Countries from "./pages/Countries";
 import LatestNewsPage from "./pages/LatestNewsPage";
+import Attractions from "./pages/Attractions";
+import AttractionPage from "./pages/AttractionPage";
+import LikedAttractions from "./pages/LikedAttractions";
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
             <Route path="/asia" element={<Asia />} />
             <Route path="/countries" element={<Countries />} />
             <Route path="/country/:country" element={<CountryPage />} />
+            <Route path="/attractions" element={<Attractions />} />
+            <Route path="/attractions/:country/:id" element={<AttractionPage />} />
+            <Route path="/liked" element={<LikedAttractions />} />
             <Route path="/latest-news" element={<LatestNewsPage />} />
             <Route path="/about" element={<About />} />
             <Route

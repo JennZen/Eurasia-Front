@@ -1,9 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { attractions } from "../data/attractions";
 import "./CountryPage.css";
 
 const CountryPage = () => {
+  const { country } = useParams();
+  const countryKey = country ? country.toLowerCase() : "austria";
+  const countryAttractions = attractions.filter((item) => item.country === countryKey);
+
   // Mock data
-  const name = "Austria";
+  const name = countryKey.charAt(0).toUpperCase() + countryKey.slice(1);
+
   const heroImage = "https://via.placeholder.com/1600x800/cccccc/000000?text=Austria+Hero+Image";
   const heroDescription = "A beautiful country in Central Europe known for its stunning landscapes, rich history, and vibrant culture.";
   const flagImage = "https://via.placeholder.com/100x60/FF0000/FFFFFF?text=Flag";
@@ -49,44 +55,45 @@ const CountryPage = () => {
     "Austria has hosted the Eurovision Song Contest twice, in 1967 and 2015.",
   ];
 
-  const attractions = [
+  const defaultAttractions = [
     {
       id: 1,
       name: "Schönbrunn Palace",
       image: "https://via.placeholder.com/600x400/cccccc/000000?text=Schonbrunn+Palace",
       description: "A former imperial summer residence, now a major tourist attraction and UNESCO World Heritage Site.",
+      country: "austria",
     },
     {
       id: 2,
       name: "Hofburg Palace",
       image: "https://via.placeholder.com/600x400/cccccc/000000?text=Hofburg+Palace",
       description: "The residence of the President of Austria and a symbol of the country's imperial past.",
+      country: "austria",
     },
     {
       id: 3,
       name: "St. Stephen's Cathedral",
       image: "https://via.placeholder.com/600x400/cccccc/000000?text=St.+Stephens+Cathedral",
       description: "Vienna's most important religious building, featuring stunning Gothic architecture.",
+      country: "austria",
     },
     {
       id: 4,
       name: "Hallstatt",
       image: "https://via.placeholder.com/600x400/cccccc/000000?text=Hallstatt",
       description: "A picturesque village often called the 'most photographed' in Austria.",
+      country: "austria",
     },
     {
       id: 5,
       name: "Grossglockner",
       image: "https://via.placeholder.com/600x400/cccccc/000000?text=Grossglockner",
       description: "Austria's highest mountain, offering breathtaking views and hiking opportunities.",
-    },
-    {
-      id: 6,
-      name: "Salzburg Festival",
-      image: "https://via.placeholder.com/600x400/cccccc/000000?text=Salzburg+Festival",
-      description: "One of the world's most famous classical music festivals held annually in Salzburg.",
+      country: "austria",
     },
   ];
+
+  const attractionsList = countryAttractions.length > 0 ? countryAttractions : defaultAttractions;
 
   return (
     <div className="country-page">
@@ -130,7 +137,7 @@ const CountryPage = () => {
       <section className="country-attractions" id="attractions">
         <h2 className="section-title">Top Attractions</h2>
         <div className="attractions-grid">
-          {attractions.map((attraction) => (
+          {attractionsList.map((attraction) => (
             <div className="attraction-card" key={attraction.id}>
               <div className="attraction-img-wrapper">
                 <img src={attraction.image} alt={attraction.name} />
@@ -138,14 +145,13 @@ const CountryPage = () => {
               <div className="attraction-content">
                 <h3>{attraction.name}</h3>
                 <p>{attraction.description}</p>
-                <a
-                  href={`https://en.wikipedia.org/wiki/${attraction.name.replace(/ /g, "_")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to={`/attractions/${attraction.country}/${attraction.id}`}
+                  state={{ via: "country" }}
                   className="attraction-btn"
                 >
-                  Learn More
-                </a>
+                  Open
+                </Link>
               </div>
             </div>
           ))}

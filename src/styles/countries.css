@@ -214,10 +214,45 @@
   gap: 12px;
 }
 
+.country-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .country-item-title {
   margin: 0;
   font-size: 1.4rem;
   font-weight: 700;
+}
+
+.country-like-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #6b7280;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.country-like-btn:hover {
+  color: #22b3c1;
+  border-color: rgba(34, 179, 193, 0.3);
+  background: rgba(34, 179, 193, 0.1);
+}
+
+.country-like-btn.liked {
+  background: #22b3c1;
+  color: #fff;
+  border-color: #22b3c1;
 }
 
 .country-item-title a {

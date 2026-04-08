@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { allCountries } from "../data/allCountries";
+import { useLikes } from "../hooks/useLikes";
 import "../styles/countries.css";
 
 const parsePopulation = (str) => {
@@ -14,6 +15,7 @@ const parseArea = (str) => {
 };
 
 const Countries = () => {
+  const { toggleCountryLike, isCountryLiked } = useLikes();
   const [search, setSearch] = useState("");
   const [selectedContinent, setSelectedContinent] = useState("All");
   const [selectedRegion, setSelectedRegion] = useState("All");
@@ -160,11 +162,20 @@ const Countries = () => {
               <img src={country.flag} alt={`Flag of ${country.name}`} />
             </Link>
             <div className="country-item-content">
-              <h3 className="country-item-title">
-                <Link to={`/country/${country.name.toLowerCase()}`}>
-                  {country.name}
-                </Link>
-              </h3>
+              <div className="country-item-top">
+                <h3 className="country-item-title">
+                  <Link to={`/country/${country.name.toLowerCase()}`}>
+                    {country.name}
+                  </Link>
+                </h3>
+                <button
+                  className={`country-like-btn ${isCountryLiked(country.name) ? "liked" : ""}`}
+                  onClick={() => toggleCountryLike(country.name)}
+                  title={isCountryLiked(country.name) ? "Remove from favorites" : "Add to favorites"}
+                >
+                  <i className="fas fa-heart"></i>
+                </button>
+              </div>
               <div className="country-item-stats">
                 <span><i className="fas fa-users"></i> {country.population}</span>
                 <span><i className="fas fa-expand-arrows-alt"></i> {country.area}</span>

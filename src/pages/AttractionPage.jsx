@@ -111,6 +111,7 @@ const AttractionPage = () => {
                     <span className="exp-price">★ {exp.rating}</span>
                     <Link
                       to={`/attractions/${exp.country}/${exp.id}`}
+                      state={{ via: "catalog" }}
                       className="secondary-btn"
                     >
                       View

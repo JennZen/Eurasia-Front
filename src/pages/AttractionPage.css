@@ -1,11 +1,13 @@
+/* ===================== Attraction Page ===================== */
 .attraction-page {
   max-width: 1600px;
   margin: 0 auto;
-  font-family: "Poppins", sans-serif;
-  background: #0d1225;
-  color: #e6ebf8;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background: #0f1631;
+  color: #d1d5db;
 }
 
+/* ===================== Hero ===================== */
 .attraction-hero {
   position: relative;
   background-size: cover;
@@ -20,7 +22,11 @@
 .attraction-hero-overlay {
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, rgba(13, 18, 37, 0.42), rgba(13, 18, 37, 0.88));
+  background: linear-gradient(
+    180deg,
+    rgba(15, 22, 49, 0.3) 0%,
+    rgba(15, 22, 49, 0.92) 100%
+  );
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,17 +38,18 @@
 
 .like-btn-hero {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  top: 24px;
+  right: 24px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #ffffff;
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   font-size: 1.3rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,275 +57,343 @@
 
 .like-btn-hero:hover {
   background: rgba(34, 179, 193, 0.3);
-  border-color: #22b3c1;
-  color: #22b3c1;
+  border-color: rgba(34, 179, 193, 0.4);
+  color: #67d4df;
 }
 
 .like-btn-hero.liked {
   background: #22b3c1;
-  color: #000;
-  border-color: #22b3c1;
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(34, 179, 193, 0.35);
 }
 
 .attraction-hero h1 {
-  font-size: 4.4rem;
-  line-height: 1.05;
+  font-size: 4rem;
+  line-height: 1.1;
   margin-bottom: 16px;
   color: #ffffff;
+  font-weight: 700;
 }
 
 .rating-row {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 10px;
+  margin-bottom: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .rating {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 800;
-  color: #ffd600;
+  color: #fbbf24;
 }
 
 .stars i {
-  color: #ffd600;
+  color: #fbbf24;
   margin-right: 2px;
+  font-size: 0.9rem;
 }
 
 .reviews {
-  color: #d6e4ff;
-  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
 }
 
 .hero-subtext {
-  max-width: 860px;
+  max-width: 800px;
   margin: 0 auto 24px;
-  color: #e4f2ff;
-  font-size: 1.45rem;
-  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.25rem;
+  line-height: 1.7;
+  font-weight: 300;
 }
 
-
+/* ===================== Buttons ===================== */
 .primary-btn,
 .secondary-btn {
   margin-top: 12px;
   padding: 12px 28px;
-  border-radius: 30px;
+  border-radius: 14px;
   text-decoration: none;
-  border: 1px solid #22b3c1;
+  border: none;
   color: #ffffff;
   background: #22b3c1;
   font-weight: 600;
-  letter-spacing: .3px;
-  transition: all .25s ease;
+  letter-spacing: 0.3px;
+  transition: all 0.25s ease;
+  display: inline-block;
 }
 
 .secondary-btn {
-  background: transparent;
-  color: #22b3c1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d1d5db;
 }
 
-.primary-btn:hover,
+.primary-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(34, 179, 193, 0.3);
+}
+
 .secondary-btn:hover {
-  background: #1c8d9b;
-  color: #ffffff;
-  border-color: #1c8d9b;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
+/* ===================== Main Layout ===================== */
 .attraction-main {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 30px;
-  padding: 45px 40px 70px;
+  padding: 50px 40px 70px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .attraction-left h2,
-.featured-section h2,
-.attraction-right h3 {
+.featured-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #ffffff;
   margin-bottom: 16px;
 }
 
-.attraction-left p {
-  color: #cdd7e6;
-  line-height: 1.7;
-  margin-bottom: 24px;
+.attraction-left .about-text {
+  color: #9ca3af;
+  line-height: 1.8;
+  margin-bottom: 32px;
 }
 
+/* ===================== Travel Details ===================== */
 .location-info {
   display: grid;
   gap: 28px;
 }
 
 .location-info h3 {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
   margin-bottom: 12px;
-  color: #e8f2ff;
+  color: #fff;
 }
 
 .location-info p {
-  color: #d7e2f5;
-  margin: 5px 0;
+  color: #9ca3af;
+  margin: 6px 0;
+  font-size: 1rem;
 }
 
 .gallery {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
 }
 
 .gallery img {
-  width: calc(50% - 5px);
-  border-radius: 10px;
+  width: calc(50% - 6px);
+  border-radius: 16px;
   object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* ===================== Other Attractions ===================== */
 .featured-section {
-  margin-top: 40px;
+  margin-top: 48px;
 }
 
 .experience-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 18px;
 }
 
 .experience-card {
-  background: rgba(20, 30, 53, 0.75);
-  border: 1px solid rgba(34, 179, 193, 0.2);
-  border-radius: 14px;
+  background: linear-gradient(145deg, #1e2444, #1a1f3a);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
   overflow: hidden;
-  transition: transform .25s ease, box-shadow .25s ease;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
 }
 
 .experience-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 24px rgba(34, 179, 193, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  border-color: rgba(34, 179, 193, 0.12);
 }
 
 .experience-card img {
   width: 100%;
   height: 160px;
   object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.experience-card:hover img {
+  transform: scale(1.05);
 }
 
 .experience-content {
-  padding: 16px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .experience-content h3 {
-  font-size: 1.1rem;
-  color: #22b3c1;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 .experience-content p {
-  font-size: 0.95rem;
-  color: #d7e6f9;
-  line-height: 1.5;
+  font-size: 0.9rem;
+  color: #9ca3af;
+  line-height: 1.6;
 }
 
 .exp-meta,
 .exp-price {
   display: block;
   font-weight: 600;
+  font-size: 0.85rem;
 }
 
 .exp-meta {
-  color: #9dcbdb;
+  color: #67d4df;
 }
 
 .exp-price {
-  color: #fff;
+  color: #fbbf24;
 }
 
+/* ===================== Sidebar ===================== */
 .attraction-right {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
+.attraction-right h3 {
+  color: #ffffff;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
 .hours-box {
-  background: rgba(22, 34, 62, 0.86);
-  border: 1px solid rgba(34, 179, 193, 0.2);
-  border-radius: 14px;
-  padding: 18px;
+  background: linear-gradient(145deg, #1e2444, #1a1f3a);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 24px;
   text-align: center;
 }
 
 .hours-box h3 {
+  font-size: 1rem;
   margin-bottom: 10px;
 }
 
 .hours-box span {
   display: block;
-  color: #d1e3f8;
+  color: #ffffff;
   font-size: 1.3rem;
   font-weight: 700;
 }
 
 .info-box,
 .price-box {
-  background: rgba(22, 34, 62, 0.86);
-  border: 1px solid rgba(34, 179, 193, 0.2);
-  border-radius: 14px;
-  padding: 18px;
+  background: linear-gradient(145deg, #1e2444, #1a1f3a);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 24px;
   text-align: center;
 }
 
 .info-box h3,
 .price-box h3 {
+  font-size: 1rem;
   margin-bottom: 12px;
-  color: #ffffff;
-  font-size: 1.1rem;
 }
 
 .info-box p {
-  color: #d1e3f8;
+  color: #d1d5db;
   margin: 8px 0;
-  font-size: 1.25rem;
-  line-height: 1.8;
-  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  font-weight: 500;
 }
 
 .info-box strong {
   color: #22b3c1;
   display: block;
-  font-size: 1rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   margin-bottom: 2px;
 }
 
 .price-value {
   display: block;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #22b3c1;
   margin-bottom: 4px;
 }
 
 .price-desc {
-  color: #a8b8d8;
-  font-size: 1.1rem;
+  color: #6b7280;
+  font-size: 0.9rem;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
+/* ===================== Not Found / Access Denied ===================== */
+.not-found {
+  text-align: center;
+  padding: 100px 40px;
+}
 
+.not-found h2 {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.not-found p {
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+/* ===================== Responsive ===================== */
 @media (max-width: 1100px) {
   .attraction-main {
     grid-template-columns: 1fr;
-    padding: 40px 25px 60px;
+    padding: 40px 24px 60px;
   }
 
   .attraction-right {
     order: -1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
 }
 
 @media (max-width: 768px) {
+  .attraction-hero {
+    height: 55vh;
+    min-height: 380px;
+  }
+
   .attraction-hero h1 {
     font-size: 2.5rem;
   }
@@ -331,7 +406,17 @@
     width: 100%;
   }
 
-  .attraction-page {
-    font-size: 0.95rem;
+  .attraction-right {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .attraction-hero h1 {
+    font-size: 2rem;
+  }
+
+  .attraction-main {
+    padding: 30px 16px 50px;
   }
 }

@@ -1,14 +1,17 @@
 import { Link, useParams } from "react-router-dom";
 import { attractions } from "../data/attractions";
+import { allCountries } from "../data/allCountries";
+import { useLikes } from "../hooks/useLikes";
 import "./CountryPage.css";
 
 const CountryPage = () => {
   const { country } = useParams();
+  const { toggleCountryLike, isCountryLiked } = useLikes();
   const countryKey = country ? country.toLowerCase() : "austria";
   const countryAttractions = attractions.filter((item) => item.country === countryKey);
 
-  // Mock data
-  const name = countryKey.charAt(0).toUpperCase() + countryKey.slice(1);
+  const countryData = allCountries.find((c) => c.name.toLowerCase() === countryKey);
+  const name = countryData ? countryData.name : countryKey.charAt(0).toUpperCase() + countryKey.slice(1);
 
   const heroImage = "https://via.placeholder.com/1600x800/cccccc/000000?text=Austria+Hero+Image";
   const heroDescription = "A beautiful country in Central Europe known for its stunning landscapes, rich history, and vibrant culture.";
@@ -102,7 +105,14 @@ const CountryPage = () => {
         style={{ backgroundImage: `url(${heroImage})` }}
       >
         <div className="country-hero-overlay">
-          <img src={flagImage} alt="Austria Flag" className="country-flag" />
+          <button
+            className={`like-btn-hero ${isCountryLiked(name) ? "liked" : ""}`}
+            onClick={() => toggleCountryLike(name)}
+            title={isCountryLiked(name) ? "Remove from favorites" : "Add to favorites"}
+          >
+            <i className="fas fa-heart"></i>
+          </button>
+          <img src={flagImage} alt={`${name} Flag`} className="country-flag" />
           <h1>{name}</h1>
           <p className="country-hero-desc">{heroDescription}</p>
           <a href="#attractions" className="country-hero-btn">

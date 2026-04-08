@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 export const useLikes = () => {
   const [likes, setLikes] = useState([]);
+  const [countryLikes, setCountryLikes] = useState([]);
 
   useEffect(() => {
     const storedLikes = localStorage.getItem("likedAttractions");
@@ -13,15 +14,25 @@ export const useLikes = () => {
         setLikes([]);
       }
     }
+
+    const storedCountryLikes = localStorage.getItem("likedCountries");
+    if (storedCountryLikes) {
+      try {
+        setCountryLikes(JSON.parse(storedCountryLikes));
+      } catch (error) {
+        console.error("Error parsing liked countries:", error);
+        setCountryLikes([]);
+      }
+    }
   }, []);
 
   const toggleLike = (attractionId) => {
     setLikes((prevLikes) => {
-      const isLiked = prevLikes.includes(attractionId);
-      const newLikes = isLiked
+      const isLikedNow = prevLikes.includes(attractionId);
+      const newLikes = isLikedNow
         ? prevLikes.filter((id) => id !== attractionId)
         : [...prevLikes, attractionId];
-      
+
       localStorage.setItem("likedAttractions", JSON.stringify(newLikes));
       return newLikes;
     });
@@ -29,5 +40,19 @@ export const useLikes = () => {
 
   const isLiked = (attractionId) => likes.includes(attractionId);
 
-  return { likes, toggleLike, isLiked };
+  const toggleCountryLike = (countryName) => {
+    setCountryLikes((prev) => {
+      const isLikedNow = prev.includes(countryName);
+      const newLikes = isLikedNow
+        ? prev.filter((n) => n !== countryName)
+        : [...prev, countryName];
+
+      localStorage.setItem("likedCountries", JSON.stringify(newLikes));
+      return newLikes;
+    });
+  };
+
+  const isCountryLiked = (countryName) => countryLikes.includes(countryName);
+
+  return { likes, toggleLike, isLiked, countryLikes, toggleCountryLike, isCountryLiked };
 };

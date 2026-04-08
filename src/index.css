@@ -21,47 +21,6 @@ body {
   padding-bottom: 2.5rem;
 }
 
-/* карточка */
-.card {
-  background-color: white;
-  border-radius: 1rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  border: 1px solid #f3f4f6;
-}
-
-/* hover эффект */
-.card-hover {
-  transition: all 0.3s;
-}
-
-.card-hover:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-/* вкладки */
-.tab {
-  padding-bottom: 0.75rem;
-  color: #6b7280;
-  transition: all 0.2s;
-}
-
-.tab-active {
-  border-bottom: 2px solid black;
-  color: black;
-  font-weight: 500;
-}
-
-/* pill */
-.pill {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
 
 /* ==============================
    PROFILE DESIGN SYSTEM
@@ -119,7 +78,7 @@ body {
   right: -20%;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(34, 179, 193, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -139,14 +98,14 @@ body {
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: #22b3c1;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 30px;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 16px rgba(34, 179, 193, 0.3);
 }
 
 .profile-name {
@@ -161,14 +120,14 @@ body {
 }
 
 .badge {
-  background: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
+  background: rgba(34, 179, 193, 0.15);
+  color: #67d4df;
   padding: 6px 16px;
   border-radius: 999px;
   font-size: 15px;
   font-weight: 500;
   margin-left: 12px;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(34, 179, 193, 0.2);
 }
 
 .edit-btn {
@@ -207,9 +166,7 @@ body {
 .stat-number {
   font-size: 36px;
   font-weight: 700;
-  background: linear-gradient(135deg, #ffffff, #a5b4fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #ffffff;
 }
 
 .stat-label {
@@ -257,7 +214,7 @@ body {
 
 .tab.active {
   color: #ffffff;
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(34, 179, 193, 0.2);
 }
 
 .tab.active::after {
@@ -275,69 +232,6 @@ body {
   margin-top: 30px;
 }
 
-/* ==============================
-   COUNTRY CARD
-   ============================== */
-
-.country-card {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.country-content {
-  flex: 1;
-}
-
-.country-footer {
-  margin-top: auto;
-}
-
-.country-top {
-  display: flex;
-  justify-content: space-between;
-}
-
-.country-code {
-  width: 48px;
-  height: 48px;
-  background: #3a3a3a;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  color: #ffffff;
-}
-
-.country-remove {
-  cursor: pointer;
-  color: #9ca3af;
-}
-
-.country-remove:hover {
-  color: #ffffff;
-}
-
-.country-title {
-  margin-top: 14px;
-  font-size: 20px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.country-subtitle {
-  font-size: 14px;
-  color: #d1d5db;
-}
-
-.country-description {
-  margin-top: 14px;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #e5e7eb;
-}
 
 /* ==============================
    PILLS
@@ -356,15 +250,10 @@ body {
   padding: 6px 14px;
   border-radius: 999px;
   font-weight: 500;
-  color: #c4b5fd;
+  color: #67d4df;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.date-added {
-  margin-left: auto;
-  color: #9ca3af;
-  font-size: 13px;
-}
 
 /* ==============================
    PROFILE INPUT
@@ -383,29 +272,10 @@ body {
 }
 
 .profile-input:focus {
-  border-color: rgba(99, 102, 241, 0.5);
+  border-color: rgba(34, 179, 193, 0.5);
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* ==============================
-   REGION COLORS
-   ============================== */
-
-.region-asia {
-  background: #f5f3ff;
-}
-
-.region-europe {
-  background: #fff1f2;
-}
-
-.region-southeastasia {
-  background: #ecfdf5;
-}
-
-.region-default {
-  background: #f9fafb;
-}
 
 /* ==============================
    RESPONSIVE
@@ -445,14 +315,14 @@ body {
 /* PRIMARY */
 
 .btn-primary {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: #22b3c1;
   color: white;
 }
 
 .btn-primary:hover {
-  filter: brightness(1.1);
+  background: #1b9eaa;
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 16px rgba(34, 179, 193, 0.3);
 }
 
 /* SECONDARY */
@@ -498,8 +368,8 @@ body {
   height: 90px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid rgba(99, 102, 241, 0.4);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
+  border: 3px solid rgba(34, 179, 193, 0.4);
+  box-shadow: 0 4px 16px rgba(34, 179, 193, 0.25);
 }
 
 .profile-name-row {
@@ -515,7 +385,7 @@ body {
 .attractions-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
+  gap: 24px;
   margin-top: 30px;
 }
 
@@ -527,7 +397,7 @@ body {
 
 .attraction-img-wrap {
   position: relative;
-  height: 200px;
+  height: 220px;
   overflow: hidden;
   background: #1a1a2e;
 }
@@ -536,44 +406,68 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s;
+  transition: transform 0.5s ease;
 }
 
 .attraction-card:hover .attraction-img {
-  transform: scale(1.05);
+  transform: scale(1.08);
+}
+
+.attraction-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(15, 22, 49, 0.95) 0%,
+    rgba(15, 22, 49, 0.3) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.attraction-img-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 20px;
+  z-index: 1;
 }
 
 .attraction-rating {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
+  top: 14px;
+  left: 14px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
   color: #fbbf24;
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 13px;
   font-weight: 600;
+  z-index: 1;
+  border: 1px solid rgba(251, 191, 36, 0.15);
 }
 
 .attraction-remove {
   position: absolute;
-  top: 12px;
-  right: 52px;
-  width: 32px;
-  height: 32px;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
   color: #fff;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.2s ease, background 0.2s ease;
+  transition: all 0.25s ease;
+  z-index: 2;
 }
 
 .attraction-card:hover .attraction-remove {
@@ -582,43 +476,84 @@ body {
 
 .attraction-remove:hover {
   background: rgba(239, 68, 68, 0.8);
-}
-
-.attraction-price {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
+  border-color: rgba(239, 68, 68, 0.4);
 }
 
 .attraction-body {
   padding: 20px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .attraction-title {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   color: #ffffff;
+  line-height: 1.3;
 }
 
-.attraction-city {
-  font-size: 14px;
-  color: #9ca3af;
+.attraction-location {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
   margin-top: 4px;
+  display: flex;
+  align-items: center;
 }
 
 .attraction-desc {
   font-size: 15px;
-  color: #d1d5db;
-  margin-top: 10px;
-  line-height: 1.5;
+  color: #9ca3af;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.attraction-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.attraction-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #67d4df;
+  background: rgba(34, 179, 193, 0.08);
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 179, 193, 0.1);
+}
+
+.attraction-meta-item i {
+  font-size: 11px;
+  color: #22b3c1;
+}
+
+.attraction-footer {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.attraction-price-tag {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.attraction-price-label {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* ==============================
@@ -864,7 +799,7 @@ body {
 
 .country-card-img-wrap {
   position: relative;
-  height: 200px;
+  height: 220px;
   overflow: hidden;
   background: #1a1a2e;
 }
@@ -873,52 +808,70 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s ease;
 }
 
 .country-card-v2:hover .country-card-img {
   transform: scale(1.08);
 }
 
-.country-card-overlay {
+.country-card-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(15, 22, 49, 0.95) 0%,
+    rgba(15, 22, 49, 0.3) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.country-card-img-bottom {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 12px 16px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  padding: 16px 20px;
+  z-index: 1;
 }
 
 .country-card-region {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  color: #fff;
-  padding: 4px 12px;
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  color: #67d4df;
+  padding: 6px 14px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  z-index: 1;
+  border: 1px solid rgba(34, 179, 193, 0.15);
 }
 
 .country-card-remove {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
   color: #fff;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.2s ease, background 0.2s ease;
+  transition: all 0.25s ease;
+  z-index: 2;
 }
 
 .country-card-v2:hover .country-card-remove {
@@ -927,6 +880,7 @@ body {
 
 .country-card-remove:hover {
   background: rgba(239, 68, 68, 0.8);
+  border-color: rgba(239, 68, 68, 0.4);
 }
 
 .country-card-body {
@@ -940,55 +894,66 @@ body {
   font-size: 22px;
   font-weight: 700;
   color: #ffffff;
+  line-height: 1.3;
 }
 
 .country-card-capital {
-  font-size: 15px;
-  color: #9ca3af;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
   margin-top: 4px;
   display: flex;
   align-items: center;
-  gap: 4px;
-}
-
-.country-card-capital-icon {
-  font-size: 13px;
 }
 
 .country-card-desc {
   font-size: 15px;
-  color: #d1d5db;
-  margin-top: 12px;
+  color: #9ca3af;
   line-height: 1.6;
   flex: 1;
 }
 
-.country-card-stats {
+.country-card-meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-top: 16px;
 }
 
-.country-card-stat {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+.country-card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(34, 179, 193, 0.06);
+  border: 1px solid rgba(34, 179, 193, 0.1);
+  border-radius: 14px;
   padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.country-card-stat-label {
+.country-card-meta-item i {
+  font-size: 16px;
+  color: #22b3c1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(34, 179, 193, 0.1);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.country-card-meta-label {
   display: block;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #9ca3af;
-  margin-bottom: 4px;
+  color: #6b7280;
 }
 
-.country-card-stat-value {
+.country-card-meta-value {
   display: block;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   color: #ffffff;
+  margin-top: 1px;
 }

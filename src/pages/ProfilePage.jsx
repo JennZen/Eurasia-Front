@@ -210,9 +210,8 @@ export default function ProfilePage() {
                         e.target.style.display = "none";
                       }}
                     />
-                    <div className="country-card-overlay">
-                      <span className="country-card-region">{c.region}</span>
-                    </div>
+                    <div className="country-card-img-overlay" />
+                    <span className="country-card-region">{c.region}</span>
                     <button
                       className="country-card-remove"
                       onClick={() => removeCountry(c.id)}
@@ -220,22 +219,30 @@ export default function ProfilePage() {
                     >
                       &times;
                     </button>
+                    <div className="country-card-img-bottom">
+                      <h3 className="country-card-name">{c.name}</h3>
+                      <p className="country-card-capital">
+                        <i className="fas fa-map-pin" style={{ marginRight: 6 }} />
+                        {c.city}
+                      </p>
+                    </div>
                   </div>
                   <div className="country-card-body">
-                    <h3 className="country-card-name">{c.name}</h3>
-                    <p className="country-card-capital">
-                      <span className="country-card-capital-icon">📍</span>
-                      {c.city}
-                    </p>
                     <p className="country-card-desc">{c.description}</p>
-                    <div className="country-card-stats">
-                      <div className="country-card-stat">
-                        <span className="country-card-stat-label">Population</span>
-                        <span className="country-card-stat-value">{c.population}</span>
+                    <div className="country-card-meta">
+                      <div className="country-card-meta-item">
+                        <i className="fas fa-users" />
+                        <div>
+                          <span className="country-card-meta-label">Population</span>
+                          <span className="country-card-meta-value">{c.population}</span>
+                        </div>
                       </div>
-                      <div className="country-card-stat">
-                        <span className="country-card-stat-label">Currency</span>
-                        <span className="country-card-stat-value">{c.currency}</span>
+                      <div className="country-card-meta-item">
+                        <i className="fas fa-coins" />
+                        <div>
+                          <span className="country-card-meta-label">Currency</span>
+                          <span className="country-card-meta-value">{c.currency}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -264,8 +271,11 @@ export default function ProfilePage() {
                         e.target.style.display = "none";
                       }}
                     />
-                    <span className="attraction-rating">&#9733; {a.rating}</span>
-                    <span className="attraction-price">${a.price}</span>
+                    <div className="attraction-img-overlay" />
+                    <span className="attraction-rating">
+                      <i className="fas fa-star" style={{ marginRight: 4 }} />
+                      {a.rating}
+                    </span>
                     <button
                       className="attraction-remove"
                       onClick={() => removeAttraction(a.id)}
@@ -273,14 +283,35 @@ export default function ProfilePage() {
                     >
                       &times;
                     </button>
+                    <div className="attraction-img-bottom">
+                      <h3 className="attraction-title">{a.name}</h3>
+                      <p className="attraction-location">
+                        <i className="fas fa-map-pin" style={{ marginRight: 6 }} />
+                        {a.city}
+                      </p>
+                    </div>
                   </div>
                   <div className="attraction-body">
-                    <h3 className="attraction-title">{a.name}</h3>
-                    <p className="attraction-city">{a.city} &middot; {a.duration}</p>
                     <p className="attraction-desc">{a.description}</p>
-                    <div className="pills">
-                      <span className="pill">{a.bestTimeToVisit}</span>
-                      <span className="pill">{a.openingHours}</span>
+                    <div className="attraction-meta">
+                      <div className="attraction-meta-item">
+                        <i className="fas fa-clock" />
+                        <span>{a.duration}</span>
+                      </div>
+                      <div className="attraction-meta-item">
+                        <i className="fas fa-sun" />
+                        <span>{a.bestTimeToVisit}</span>
+                      </div>
+                      <div className="attraction-meta-item">
+                        <i className="fas fa-door-open" />
+                        <span>{a.openingHours}</span>
+                      </div>
+                    </div>
+                    <div className="attraction-footer">
+                      <span className="attraction-price-tag">
+                        <span className="attraction-price-label">from</span>
+                        ${a.price}
+                      </span>
                     </div>
                   </div>
                 </div>

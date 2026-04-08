@@ -20,6 +20,7 @@
   margin: 0 auto;
   padding: 0 20px;
   position: relative;
+  height: 100%;
 }
 
 .header .logo a {
@@ -49,6 +50,14 @@
   list-style: none;
   gap: 20px;
   margin: 0;
+  align-items: center;
+  height: 100%;
+}
+
+.header .nav li {
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .header .nav li a {
@@ -59,6 +68,11 @@
   border-radius: 4px;
   transition: background-color 0.3s;
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  height: 100%;
 }
 
 .header .nav li a:hover {
@@ -74,6 +88,32 @@
   width: 60%;
   height: 2px;
   background: white;
+}
+
+/* Profile Icon Styling */
+.header .nav li a.profile-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #22b3c1, #1a9caa);
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.header .nav li a.profile-button:hover {
+  background: linear-gradient(135deg, #1a9caa, #0d7a88);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 179, 193, 0.4);
+}
+
+.header .nav li a.profile-button i {
+  font-size: 18px;
+}
+
+.header .nav li a.profile-button.active {
+  box-shadow: 0 6px 18px rgba(34, 179, 193, 0.45);
 }
 
 /* Mobile Responsive */
@@ -117,6 +157,23 @@
     height: 100%;
     bottom: auto;
     top: 0;
+  }
+
+  /* Mobile Profile Button */
+  .header .nav li:last-child a {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .header .nav li:last-child a:hover {
+    transform: none;
+  }
+
+  .header .nav li:last-child a.active {
+    background: linear-gradient(135deg, #0d7a88, #095964);
   }
 }
 

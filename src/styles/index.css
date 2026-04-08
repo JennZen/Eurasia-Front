@@ -86,8 +86,10 @@ body {
   width: 80%;
   max-width: 1200px;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
   padding: 30px 100px;
   border-radius: 61px;
   display: flex;
@@ -118,7 +120,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #22b3c1;
+  border: 1px solid rgba(34, 179, 193, 0.6);
   border-radius: 50%;
   margin-top: 4px;
 }
@@ -126,7 +128,7 @@ body {
 .more-info h4 {
   margin: 0;
   font-size: 20px;
-  color: #22b3c1;
+  color: #fff;
   line-height: 0.9;
   font-weight: 700;
 }
@@ -134,7 +136,7 @@ body {
 .more-info h4 span {
   display: block;
   font-size: 14px;
-  color: #888;
+  color: rgba(255, 255, 255, 0.6);
   font-weight: 400;
   margin-bottom: 2px;
 }

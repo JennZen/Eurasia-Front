@@ -1,0 +1,183 @@
+import { User, Country, Attraction } from '../types/index';
+
+export const mockUser: User = {
+  id: 1,
+  name: 'Alex Carter',
+  email: 'alex.carter@example.com',
+  avatarUrl: 'https://i.pravatar.cc/300?img=15',
+  phone: '+37360000000'
+};
+
+export const mockCountries: Country[] = [
+  {
+    id: 1,
+    name: 'Japan',
+    formalName: 'Japan',
+    flagUrl: 'https://flagcdn.com/w320/jp.png',
+    capital: 'Tokyo',
+    population: 125000000,
+    currency: 'JPY',
+    summary: 'Famous for technology, tradition, and stunning natural landscapes.'
+  },
+  {
+    id: 2,
+    name: 'South Korea',
+    formalName: 'Republic of Korea',
+    flagUrl: 'https://flagcdn.com/w320/kr.png',
+    capital: 'Seoul',
+    population: 51780000,
+    currency: 'KRW',
+    summary: 'Modern metropolises blend with ancient temples and vibrant culture.'
+  },
+  {
+    id: 3,
+    name: 'Thailand',
+    formalName: 'Kingdom of Thailand',
+    flagUrl: 'https://flagcdn.com/w320/th.png',
+    capital: 'Bangkok',
+    population: 71800000,
+    currency: 'THB',
+    summary: 'Exotic beaches, golden temples, and warm-hearted people await.'
+  },
+  {
+    id: 4,
+    name: 'France',
+    formalName: 'French Republic',
+    flagUrl: 'https://flagcdn.com/w320/fr.png',
+    capital: 'Paris',
+    population: 67750000,
+    currency: 'EUR',
+    summary: 'The city of love, art, cuisine, and romance on every corner.'
+  }
+];
+
+export const mockAttractions: Attraction[] = [
+  {
+    id: 1,
+    name: 'Mount Fuji Tour',
+    description: 'Guided day tour to iconic Mount Fuji',
+    fullDescription: 'Experience a full day guided tour to Japan\'s most iconic mountain. Includes professional guide, transportation, and lunch at local restaurant.',
+    imageUrl: 'https://picsum.photos/400/250?random=1',
+    bgUrl: 'https://picsum.photos/1200/400?random=1',
+    city: 'Tokyo',
+    duration: '8h',
+    bestTimeToVisit: 'Spring & Fall',
+    openingHours: '08:00 - 18:00',
+    rating: 4.8,
+    numberOfReviews: 320,
+    price: 120,
+    countryId: 1
+  },
+  {
+    id: 2,
+    name: 'Kyoto Temple Walk',
+    description: 'Traditional temple exploration tour',
+    fullDescription: 'Walk through Kyoto\'s most famous temples including Fushimi Inari and Kinkaku-ji. Learn about Japanese Buddhism and ancient architecture.',
+    imageUrl: 'https://picsum.photos/400/250?random=2',
+    bgUrl: 'https://picsum.photos/1200/400?random=2',
+    city: 'Kyoto',
+    duration: '6h',
+    bestTimeToVisit: 'Year-round',
+    openingHours: '09:00 - 17:00',
+    rating: 4.9,
+    numberOfReviews: 512,
+    price: 95,
+    countryId: 1
+  },
+  {
+    id: 3,
+    name: 'Seoul Night Market',
+    description: 'Street food and shopping experience',
+    fullDescription: 'Explore vibrant Seoul night markets with traditional Korean street food, shopping, and entertainment. Perfect for foodies and night owls.',
+    imageUrl: 'https://picsum.photos/400/250?random=3',
+    bgUrl: 'https://picsum.photos/1200/400?random=3',
+    city: 'Seoul',
+    duration: '4h',
+    bestTimeToVisit: 'Spring & Fall',
+    openingHours: '18:00 - 23:00',
+    rating: 4.6,
+    numberOfReviews: 278,
+    price: 45,
+    countryId: 2
+  },
+  {
+    id: 4,
+    name: 'DMZ Tour',
+    description: 'Historic Korean demilitarized zone tour',
+    fullDescription: 'Visit one of the world\'s most fortified borders. Includes military guide, panoramic views, and historical museum entry.',
+    imageUrl: 'https://picsum.photos/400/250?random=4',
+    bgUrl: 'https://picsum.photos/1200/400?random=4',
+    city: 'Panmunjom',
+    duration: '7h',
+    bestTimeToVisit: 'Summer & Fall',
+    openingHours: '08:00 - 17:00',
+    rating: 4.7,
+    numberOfReviews: 201,
+    price: 85,
+    countryId: 2
+  },
+  {
+    id: 5,
+    name: 'Bangkok Grand Palace',
+    description: 'Royal palace and temple exploration',
+    fullDescription: 'Explore Thailand\'s most sacred site. See intricate architecture, learn about Thai monarchy. Dress code required.',
+    imageUrl: 'https://picsum.photos/400/250?random=5',
+    bgUrl: 'https://picsum.photos/1200/400?random=5',
+    city: 'Bangkok',
+    duration: '3h',
+    bestTimeToVisit: 'November - February',
+    openingHours: '08:30 - 15:30',
+    rating: 4.5,
+    numberOfReviews: 645,
+    price: 35,
+    countryId: 3
+  },
+  {
+    id: 6,
+    name: 'Floating Markets Tour',
+    description: 'Traditional floating market boat tour',
+    fullDescription: 'Experience authentic Thai floating markets. Visit local farms, taste fresh fruits, and shop for handicrafts. Early morning tour recommended.',
+    imageUrl: 'https://picsum.photos/400/250?random=6',
+    bgUrl: 'https://picsum.photos/1200/400?random=6',
+    city: 'Bangkok',
+    duration: '5h',
+    bestTimeToVisit: 'November - March',
+    openingHours: '06:00 - 12:00',
+    rating: 4.4,
+    numberOfReviews: 432,
+    price: 55,
+    countryId: 3
+  },
+  {
+    id: 7,
+    name: 'Eiffel Tower & Seine Cruise',
+    description: 'Paris iconic landmarks tour',
+    fullDescription: 'Visit the Iron Lady by day and enjoy a romantic Seine river cruise by evening. Includes skip-the-line entry and 3-course dinner.',
+    imageUrl: 'https://picsum.photos/400/250?random=7',
+    bgUrl: 'https://picsum.photos/1200/400?random=7',
+    city: 'Paris',
+    duration: '10h',
+    bestTimeToVisit: 'Spring & Summer',
+    openingHours: '09:00 - 20:00',
+    rating: 4.9,
+    numberOfReviews: 789,
+    price: 210,
+    countryId: 4
+  },
+  {
+    id: 8,
+    name: 'Louvre Museum Tour',
+    description: 'World\'s largest art museum exploration',
+    fullDescription: 'Guided tour through the Louvre with expert art historian. See Mona Lisa, Venus de Milo, and other masterpieces.',
+    imageUrl: 'https://picsum.photos/400/250?random=8',
+    bgUrl: 'https://picsum.photos/1200/400?random=8',
+    city: 'Paris',
+    duration: '4h',
+    bestTimeToVisit: 'October - March',
+    openingHours: '09:00 - 18:00',
+    rating: 4.8,
+    numberOfReviews: 856,
+    price: 130,
+    countryId: 4
+  }
+];

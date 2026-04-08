@@ -1,30 +1,27 @@
-import { Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import "../styles/header-footer.css";
 
 const Header = () => {
-  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
     { path: "/", label: "Home" },
     { path: "/countries", label: "Countries" },
     { path: "/attractions", label: "Attractions" },
-    { path: "/liked", label: "LikedAttractions" },
-    { path: "/quiz", label: "Quiz" },
+    { path: "/liked", label: "Liked" },
     { path: "/about", label: "About" },
-    { path: "/deals", label: "Deals" },
-    { path: "/reservation", label: "Reservation" },
-    { path: "/book", label: "Book Yours" },
+    { path: "/quiz", label: "Quiz" },
+    { path: "/profile", label: "Profile", special: true },
   ];
 
   return (
     <header className="header">
       <nav>
         <div className="logo">
-          <Link to="/" className="logo-link">
+          <NavLink to="/" className="logo-link">
             <p>ProjectEurasia</p>
-          </Link>
+          </NavLink>
         </div>
 
         <button
@@ -38,15 +35,18 @@ const Header = () => {
         <ul className={`nav ${isMenuOpen ? "nav-open" : ""}`}>
           {navItems.map((item) => (
             <li key={item.path}>
-              <Link
+              <NavLink
                 to={item.path}
-                className={location.pathname === item.path ? "active" : ""}
+                className={({ isActive }) =>
+                  `${item.special ? 'profile-button' : ''} ${isActive ? 'active' : ''}`.trim()
+                }
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}
-              </Link>
+              </NavLink>
             </li>
           ))}
+
         </ul>
       </nav>
     </header>

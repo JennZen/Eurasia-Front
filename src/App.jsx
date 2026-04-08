@@ -12,6 +12,7 @@ import Attractions from "./pages/Attractions";
 import AttractionPage from "./pages/AttractionPage";
 import LikedAttractions from "./pages/LikedAttractions";
 import Quiz from "./pages/Quiz";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -28,18 +29,10 @@ function App() {
             <Route path="/attractions" element={<Attractions />} />
             <Route path="/attractions/:country/:id" element={<AttractionPage />} />
             <Route path="/liked" element={<LikedAttractions />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/latest-news" element={<LatestNewsPage />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/about" element={<About />} />
-            <Route
-              path="/deals"
-              element={<div>Deals Page (Coming Soon)</div>}
-            />
-            <Route
-              path="/reservation"
-              element={<div>Reservation Page (Coming Soon)</div>}
-            />
-            <Route path="/book" element={<div>Book Page (Coming Soon)</div>} />
           </Routes>
         </main>
         <Footer />

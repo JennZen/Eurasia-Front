@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { allCountries } from "../data/allCountries";
 import "../styles/quiz.css";
 
-const TOTAL_TIME = 10 * 60;
+const TOTAL_TIME = 15 * 60;
 
 const quizCountries = allCountries.map((c) => ({
   name: c.name,
@@ -295,7 +295,7 @@ const Quiz = () => {
         {isIdle && (
           <div className="quiz-start-section">
             <p className="quiz-rules">
-              You have <strong>10 minutes</strong> to name as many countries as
+              You have <strong>15 minutes</strong> to name as many countries as
               you can. Type the country name in English.
             </p>
             <button className="quiz-btn quiz-btn-start" onClick={startGame}>

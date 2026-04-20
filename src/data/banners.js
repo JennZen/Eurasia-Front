@@ -6,7 +6,7 @@ export const banners = [
     image: "/images/banner-01.jpg",
     population: "44.48 M",
     territory: "275.400 KM²",
-    avgPrice: "$946.000",
+    capital: "Nassau",
     link: "/country/caribbean",
   },
   {
@@ -16,7 +16,7 @@ export const banners = [
     image: "/images/banner-02.jpg",
     population: "8.66 M",
     territory: "41.290 KM²",
-    avgPrice: "$1.100.200",
+    capital: "Bern",
     link: "/country/switzerland",
   },
   {
@@ -26,7 +26,7 @@ export const banners = [
     image: "/images/banner-03.jpg",
     population: "67.41 M",
     territory: "551.500 KM²",
-    avgPrice: "$425.600",
+    capital: "Paris",
     link: "/country/france",
   },
   {
@@ -36,7 +36,7 @@ export const banners = [
     image: "/images/banner-04.jpg",
     population: "69.86 M",
     territory: "513.120 KM²",
-    avgPrice: "$165.450",
+    capital: "Bangkok",
     link: "/country/thailand",
   },
 ];

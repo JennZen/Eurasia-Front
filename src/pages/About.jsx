@@ -1,5 +1,5 @@
 import "../styles/index.css";
-import "./About.css";
+import "../styles/About.css";
 
 const About = () => {
   return (

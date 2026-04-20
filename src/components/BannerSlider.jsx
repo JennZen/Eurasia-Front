@@ -74,12 +74,12 @@ const BannerSlider = () => {
                       </div>
                     </div>
                     <div className="info-item">
-                      <i className="fa fa-home"></i>
+                      <i className="fa fa-city"></i>
                       <div>
                         <h4>
-                          <span>AVG Price:</span>
+                          <span>Capital:</span>
                           <br />
-                          {banner.avgPrice}
+                          {banner.capital}
                         </h4>
                       </div>
                     </div>

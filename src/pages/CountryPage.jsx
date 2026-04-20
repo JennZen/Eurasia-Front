@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { attractions } from "../data/attractions";
 import { allCountries } from "../data/allCountries";
 import { useLikes } from "../hooks/useLikes";
-import "./CountryPage.css";
+import "../styles/CountryPage.css";
 
 const CountryPage = () => {
   const { country } = useParams();

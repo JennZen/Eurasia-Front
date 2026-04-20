@@ -1,0 +1,96 @@
+.about-page {
+  color: #fff;
+}
+
+.about-hero {
+  position: relative;
+  background-image: url("/images/fjords.jpg");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0;
+}
+
+.about-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 0%, rgba(8, 10, 24, 0.5) 60%),
+    linear-gradient(180deg, rgba(15, 22, 49, 0.45), rgba(15, 22, 49, 0.85));
+}
+
+.about-hero-content {
+  position: relative;
+  max-width: 860px;
+  width: 100%;
+  padding: 0 24px;
+  z-index: 1;
+  animation: aboutFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes aboutFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.about-hero h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 22px;
+  background: linear-gradient(135deg, #ffffff 0%, #a6e8ef 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.4);
+}
+
+.about-hero p {
+  font-family: "Open Sans", sans-serif;
+  font-size: 18px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.about-content {
+  padding: 100px 0 140px;
+  background: linear-gradient(180deg, #0f1631 0%, #141a33 100%);
+  position: relative;
+}
+
+.about-content::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34, 179, 193, 0.4), transparent);
+}
+
+.about-text {
+  max-width: 760px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 17px;
+  line-height: 1.9;
+  text-align: justify;
+}
+
+.about-title {
+  font-weight: 900;
+  margin-bottom: 24px;
+  letter-spacing: 0.25px;
+}
+
+.about-text p {
+  margin-bottom: 20px;
+  text-align: center;
+  opacity: 0.92;
+}

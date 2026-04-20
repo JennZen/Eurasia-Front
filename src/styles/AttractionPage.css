@@ -22,11 +22,9 @@
 .attraction-hero-overlay {
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 22, 49, 0.3) 0%,
-    rgba(15, 22, 49, 0.92) 100%
-  );
+  background:
+    radial-gradient(ellipse at center top, transparent 0%, rgba(15, 22, 49, 0.55) 65%),
+    linear-gradient(180deg, rgba(15, 22, 49, 0.2) 0%, rgba(15, 22, 49, 0.95) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -69,11 +67,14 @@
 }
 
 .attraction-hero h1 {
-  font-size: 4rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 4.2rem;
   line-height: 1.1;
+  letter-spacing: -0.03em;
   margin-bottom: 16px;
   color: #ffffff;
   font-weight: 700;
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.6);
 }
 
 .rating-row {
@@ -118,33 +119,37 @@
 .primary-btn,
 .secondary-btn {
   margin-top: 12px;
-  padding: 12px 28px;
-  border-radius: 14px;
+  padding: 13px 30px;
+  border-radius: 999px;
   text-decoration: none;
-  border: none;
+  border: 1px solid transparent;
   color: #ffffff;
-  background: #22b3c1;
+  background: linear-gradient(135deg, #22b3c1, #4fc3f7);
   font-weight: 600;
   letter-spacing: 0.3px;
-  transition: all 0.25s ease;
   display: inline-block;
+  box-shadow: 0 6px 18px rgba(34, 179, 193, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
 }
 
 .secondary-btn {
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.12);
   color: #d1d5db;
+  backdrop-filter: blur(8px);
+  box-shadow: none;
 }
 
 .primary-btn:hover {
-  filter: brightness(1.1);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(34, 179, 193, 0.3);
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(34, 179, 193, 0.5);
 }
 
 .secondary-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
+  transform: translateY(-1px);
 }
 
 /* ===================== Main Layout ===================== */
@@ -201,6 +206,13 @@
   border-radius: 16px;
   object-fit: cover;
   border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  cursor: pointer;
+}
+
+.gallery img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
 }
 
 /* ===================== Other Attractions ===================== */
@@ -292,8 +304,29 @@
   background: linear-gradient(145deg, #1e2444, #1a1f3a);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 18px;
-  padding: 24px;
+  padding: 26px 22px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hours-box::before,
+.info-box::before,
+.price-box::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79, 195, 247, 0.4), transparent);
+}
+
+.hours-box:hover,
+.info-box:hover,
+.price-box:hover {
+  transform: translateY(-3px);
+  border-color: rgba(34, 179, 193, 0.18);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
 }
 
 .hours-box h3 {
@@ -313,8 +346,11 @@
   background: linear-gradient(145deg, #1e2444, #1a1f3a);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 18px;
-  padding: 24px;
+  padding: 26px 22px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .info-box h3,
@@ -342,9 +378,13 @@
 
 .price-value {
   display: block;
-  font-size: 2rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #22b3c1;
+  background: linear-gradient(135deg, #22b3c1, #4fc3f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 4px;
 }
 

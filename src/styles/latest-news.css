@@ -7,17 +7,30 @@
 .latest-news__container {
   max-width: 1400px;
   margin: 0 auto;
-  border-top: 2px solid #22b3c1;
-  padding-top: 16px;
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, #22b3c1, #4fc3f7, transparent) 1;
+  padding-top: 20px;
 }
 
 .latest-news__title {
   font-family: "Poppins", sans-serif;
-  font-size: 32px;
+  font-size: 34px;
   font-weight: 700;
   letter-spacing: -0.02em;
   color: #fff;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.latest-news__title::before {
+  content: "";
+  width: 5px;
+  height: 28px;
+  background: linear-gradient(180deg, #22b3c1, #4fc3f7);
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(34, 179, 193, 0.5);
 }
 
 /* Top grid: featured + side */
@@ -30,8 +43,8 @@
 
 /* Featured card (left, large) */
 .latest-news__featured {
-  border-right: 1px solid #333;
-  padding-right: 24px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding-right: 28px;
 }
 
 .latest-news__featured-link {
@@ -44,12 +57,18 @@
   width: 100%;
   height: 300px;
   overflow: hidden;
+  border-radius: 14px;
 }
 
 .latest-news__featured-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.latest-news__featured-link:hover .latest-news__featured-image img {
+  transform: scale(1.04);
 }
 
 .latest-news__featured-content {
@@ -108,7 +127,7 @@
   padding: 16px 0 16px 24px;
   text-decoration: none;
   color: inherit;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .latest-news__side-card:last-child {
@@ -125,12 +144,18 @@
   flex-shrink: 0;
   overflow: hidden;
   order: 1;
+  border-radius: 10px;
 }
 
 .latest-news__side-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.latest-news__side-card:hover .latest-news__side-image img {
+  transform: scale(1.08);
 }
 
 .latest-news__side-content {
@@ -166,7 +191,7 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 0;
-  border-top: 1px solid #333;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   margin-top: 20px;
   padding-top: 20px;
   margin-bottom: 100px;
@@ -176,7 +201,7 @@
   text-decoration: none;
   color: inherit;
   padding: 0 24px;
-  border-right: 1px solid #333;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .latest-news__bottom-card:first-child {
@@ -195,12 +220,18 @@
   width: 100%;
   height: 160px;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .latest-news__bottom-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.latest-news__bottom-card:hover .latest-news__bottom-image img {
+  transform: scale(1.06);
 }
 
 .latest-news__bottom-content {
@@ -244,7 +275,7 @@
     border-right: none;
     padding-right: 0;
     padding-bottom: 20px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .latest-news__side-card {
@@ -294,7 +325,7 @@
   .latest-news__bottom-card {
     border-right: none;
     padding: 16px 0;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .latest-news__bottom-card:first-child {

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { attractions } from "../data/attractions";
 import { useLikes } from "../hooks/useLikes";
-import "./Attractions.css";
+import "../styles/Attractions.css";
 
 const uniqueCountries = ["All", ...new Set(attractions.map((a) => a.country))];
 

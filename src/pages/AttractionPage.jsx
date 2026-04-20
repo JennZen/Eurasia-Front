@@ -1,7 +1,7 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { attractions } from "../data/attractions";
 import { useLikes } from "../hooks/useLikes";
-import "./AttractionPage.css";
+import "../styles/AttractionPage.css";
 
 const AttractionPage = () => {
   const location = useLocation();

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { attractions } from "../data/attractions";
 import { allCountries } from "../data/allCountries";
 import { useLikes } from "../hooks/useLikes";
-import "./LikedAttractions.css";
+import "../styles/LikedAttractions.css";
 
 const LikedAttractions = () => {
   const { likes, toggleLike, countryLikes, toggleCountryLike } = useLikes();

@@ -6,8 +6,8 @@
 }
 
 body {
-  font-family: "Poppins", sans-serif;
-  background-color: #232223;
+  font-family: "Open Sans", system-ui, sans-serif;
+  background-color: #0f1631;
 }
 
 /* Section 1 - slider */
@@ -83,62 +83,87 @@ body {
   position: absolute;
   bottom: 150px;
   left: 50%;
-  width: 80%;
-  max-width: 1200px;
+  width: min(92%, 1200px);
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(145deg, rgba(15, 22, 49, 0.55), rgba(26, 42, 82, 0.45));
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #fff;
-  padding: 30px 100px;
-  border-radius: 61px;
-  display: flex;
+  padding: 24px 40px;
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
+  gap: 24px;
   z-index: 2;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.more-info .info-items {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
 }
 
 .more-info .info-item {
   display: flex;
-  align-items: flex-start;
-  gap: 15px;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
 }
 
-.more-info .info-items {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-right: 30%;
-  gap: 15px;
+.more-info .info-item > div {
+  min-width: 0;
   flex: 1;
 }
 
 .more-info .info-item i {
-  font-size: 24px;
+  font-size: 20px;
   color: #22b3c1;
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(34, 179, 193, 0.6);
+  border: 1px solid rgba(34, 179, 193, 0.5);
   border-radius: 50%;
-  margin-top: 4px;
+  background: rgba(34, 179, 193, 0.08);
+  box-shadow: 0 0 20px rgba(34, 179, 193, 0.15), inset 0 0 10px rgba(34, 179, 193, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.more-info .info-item:hover i {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(34, 179, 193, 0.35), inset 0 0 10px rgba(34, 179, 193, 0.15);
 }
 
 .more-info h4 {
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
   color: #fff;
-  line-height: 0.9;
+  line-height: 1.15;
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .more-info h4 span {
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.6);
   font-weight: 400;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.more-info h4 br {
+  display: none;
 }
 
 .border-button {
@@ -168,23 +193,29 @@ body {
   color: #fff;
 }
 
+.more-info-button {
+  flex-shrink: 0;
+}
+
 .more-info-button a {
-  padding: 10px 20px;
-  background: #22b3c1;
+  display: inline-block;
+  padding: 12px 26px;
+  background: linear-gradient(135deg, #22b3c1, #4fc3f7);
   color: #fff;
-  border-radius: 25px;
+  border-radius: 999px;
   text-decoration: none;
+  font-family: "Poppins", sans-serif;
   font-weight: 600;
-  transition: 0.3s;
+  font-size: 14px;
   white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(34, 179, 193, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
 }
 
 .more-info-button a:hover {
-  opacity: 0.8;
-}
-
-.more-info-button {
-  margin-left: auto;
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 12px 28px rgba(34, 179, 193, 0.45);
 }
 
 .progress-bars {
@@ -255,13 +286,24 @@ body {
 }
 
 .visit-country {
-  margin-top: 120px;
+  margin: 140px auto 0;
   padding: 0 20px;
   color: white;
   max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
   text-align: center;
+}
+
+.visit-country .section-heading p {
+  font-family: "Poppins", sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0;
+  background: linear-gradient(135deg, #ffffff 0%, #a6e8ef 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .eurasian {
@@ -279,26 +321,47 @@ body {
 
 .eurasian .continent {
   position: relative;
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 40px;
+  padding: 32px;
+  background: linear-gradient(145deg, rgba(30, 36, 68, 0.6), rgba(26, 31, 58, 0.5));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 36px;
   justify-content: space-around;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.eurasian .continent:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34, 179, 193, 0.2);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(34, 179, 193, 0.1);
 }
 
 .eurasian .continent:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
   margin-bottom: 100px;
+}
+
+.eurasian .img-continent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .eurasian .img-continent img {
   max-width: 270px;
   width: 100%;
   height: auto;
-  transition: transform 0.5s ease;
+  filter: drop-shadow(0 10px 30px rgba(34, 179, 193, 0.15));
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+}
+
+.eurasian .continent:hover .img-continent img {
+  transform: scale(1.04) rotate(-1deg);
+  filter: drop-shadow(0 14px 40px rgba(34, 179, 193, 0.3));
 }
 
 .eurasian .about-continent {
@@ -316,43 +379,47 @@ body {
 }
 
 .eurasian .header-continent p {
-  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+  font-size: 28px;
   font-weight: 700;
   color: #fff;
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .eurasian .header-continent a {
   font-size: 14px;
   color: #fff;
-  background-color: #22b3c1;
-  border: 1px solid #22b3c1;
-  padding: 12px 30px;
+  background: linear-gradient(135deg, #22b3c1, #4fc3f7);
+  border: none;
+  padding: 11px 26px;
   display: inline-block;
-  border-radius: 25px;
-  font-weight: 500;
-  text-transform: capitalize;
-  letter-spacing: 0.5px;
-  transition: all 0.3s;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-decoration: none;
+  box-shadow: 0 6px 18px rgba(34, 179, 193, 0.28);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
 }
 
 .eurasian .header-continent a:hover {
-  background-color: #fff;
-  color: #22b3c1;
-  border: 1px solid #22b3c1;
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 10px 24px rgba(34, 179, 193, 0.42);
 }
 
 .eurasian .description {
-  margin: 18px 0px;
-  font-size: 15px;
-  color: #afafaf;
+  margin: 20px 0;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  color: #b8c2d9;
+  line-height: 1.7;
 }
 
 .eurasian .info {
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  padding: 15px 0px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 16px 0;
   margin: 0;
   list-style: none;
   display: flex;
@@ -389,8 +456,15 @@ body {
 /* Responsive Design */
 @media (max-width: 1200px) {
   .more-info {
-    width: 90%;
-    padding: 25px 60px;
+    padding: 22px 32px;
+  }
+
+  .more-info .info-items {
+    gap: 16px;
+  }
+
+  .more-info h4 {
+    font-size: 16px;
   }
 
   .visit-country {
@@ -401,12 +475,18 @@ body {
 @media (max-width: 992px) {
   .more-info {
     bottom: 120px;
-    padding: 20px 40px;
-    border-radius: 40px;
+    padding: 20px 28px;
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
-  .more-info .info-items {
-    padding-right: 20%;
+  .more-info-button {
+    justify-self: center;
+  }
+
+  .more-info-button a {
+    width: auto;
+    padding: 11px 28px;
   }
 
   .progress-bars {
@@ -437,31 +517,26 @@ body {
   }
 
   .more-info {
-    flex-direction: column;
     bottom: 100px;
-    padding: 20px;
+    padding: 18px 20px;
     border-radius: 20px;
-    width: 90%;
   }
 
   .more-info .info-items {
-    padding-right: 0;
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .more-info .info-item {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .more-info-button {
-    margin-left: 0;
-    margin-top: 15px;
     width: 100%;
   }
 
   .more-info-button a {
+    display: block;
     width: 100%;
     text-align: center;
   }

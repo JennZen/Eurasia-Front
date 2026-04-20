@@ -165,8 +165,11 @@ const Quiz = () => {
                 geoLayersRef.current[quizName].push(layer);
 
                 layer.on("click", (e) => {
-                  if (gameStatusRef.current !== "ended") return;
+                  const status = gameStatusRef.current;
                   const wasGuessed = guessedRef.current.has(quizName);
+                  // During the game: popup only for already guessed (blue) countries.
+                  // After the game: popup for all countries (guessed + missed).
+                  if (status !== "ended" && !wasGuessed) return;
                   L.popup({ className: "quiz-popup" })
                     .setLatLng(e.latlng)
                     .setContent(
@@ -212,6 +215,8 @@ const Quiz = () => {
             weight: 1.5,
             color: "#4fc3f7",
           });
+          const el = layer.getElement && layer.getElement();
+          if (el) el.classList.add("quiz-country-clickable");
         });
       }
     });
@@ -229,6 +234,8 @@ const Quiz = () => {
               weight: 1,
               color: "#c0392b",
             });
+            const el = layer.getElement && layer.getElement();
+            if (el) el.classList.add("quiz-country-clickable");
           });
         }
       });
@@ -237,8 +244,13 @@ const Quiz = () => {
 
   const resetMap = () => {
     Object.values(geoLayersRef.current).forEach((layers) => {
-      layers.forEach((layer) => layer.setStyle(DEFAULT_STYLE));
+      layers.forEach((layer) => {
+        layer.setStyle(DEFAULT_STYLE);
+        const el = layer.getElement && layer.getElement();
+        if (el) el.classList.remove("quiz-country-clickable");
+      });
     });
+    if (mapInstanceRef.current) mapInstanceRef.current.closePopup();
   };
 
   const startGame = () => {

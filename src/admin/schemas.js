@@ -1,0 +1,137 @@
+export const SCHEMAS = {
+  countries: {
+    key: "countries",
+    label: "Countries",
+    labelOne: "Country",
+    app: "Geography",
+    icon: "🌍",
+    searchFields: ["name", "capital", "region", "continent"],
+    listColumns: [
+      { key: "flag", label: "Flag", type: "image" },
+      { key: "name", label: "Name", primary: true },
+      { key: "capital", label: "Capital" },
+      { key: "continent", label: "Continent", type: "badge" },
+      { key: "region", label: "Region" },
+      { key: "population", label: "Population" },
+      { key: "area", label: "Area" },
+    ],
+    filters: [
+      { key: "continent", label: "Continent", options: ["Europe", "Asia"] },
+    ],
+    fields: [
+      { key: "name", label: "Name", type: "text", required: true, group: "Basic" },
+      { key: "capital", label: "Capital", type: "text", required: true, group: "Basic" },
+      { key: "continent", label: "Continent", type: "select", required: true, options: ["Europe", "Asia"], group: "Basic" },
+      { key: "region", label: "Region", type: "text", group: "Basic", hint: "Geographic sub-region (e.g. Northern Europe)." },
+      { key: "population", label: "Population", type: "text", group: "Demographics", hint: "Free text — e.g. \"83.2M\"." },
+      { key: "area", label: "Area", type: "text", group: "Demographics", hint: "Free text — e.g. \"357,022 km²\"." },
+      { key: "flag", label: "Flag URL", type: "url", group: "Media" },
+      { key: "description", label: "Description", type: "textarea", group: "Content" },
+    ],
+  },
+
+  attractions: {
+    key: "attractions",
+    label: "Attractions",
+    labelOne: "Attraction",
+    app: "Geography",
+    icon: "🏛️",
+    searchFields: ["name", "city", "country"],
+    listColumns: [
+      { key: "image", label: "Image", type: "image" },
+      { key: "name", label: "Name", primary: true },
+      { key: "city", label: "City" },
+      { key: "country", label: "Country", type: "badge" },
+      { key: "price", label: "Price" },
+      { key: "rating", label: "Rating" },
+      { key: "reviews", label: "Reviews" },
+    ],
+    filters: [],
+    fields: [
+      { key: "name", label: "Name", type: "text", required: true, group: "Basic" },
+      { key: "city", label: "City", type: "text", required: true, group: "Basic" },
+      { key: "country", label: "Country (slug)", type: "text", required: true, group: "Basic", hint: "Lowercase country slug, e.g. \"romania\"." },
+      { key: "price", label: "Price", type: "text", group: "Visit" },
+      { key: "duration", label: "Duration", type: "text", group: "Visit" },
+      { key: "bestTime", label: "Best time", type: "text", group: "Visit" },
+      { key: "hours", label: "Opening hours", type: "text", group: "Visit" },
+      { key: "rating", label: "Rating", type: "number", group: "Reviews", hint: "From 0 to 5." },
+      { key: "reviews", label: "Number of reviews", type: "number", group: "Reviews" },
+      { key: "image", label: "Image URL", type: "url", group: "Media" },
+      { key: "heroImage", label: "Hero image URL", type: "url", group: "Media" },
+      { key: "description", label: "Short description", type: "textarea", group: "Content" },
+      { key: "fullDescription", label: "Full description", type: "textarea", group: "Content" },
+    ],
+  },
+
+  news: {
+    key: "news",
+    label: "News",
+    labelOne: "News item",
+    app: "Content",
+    icon: "📰",
+    searchFields: ["title", "tag"],
+    listColumns: [
+      { key: "title", label: "Title", primary: true },
+      { key: "tag", label: "Tag", type: "badge" },
+      { key: "time", label: "Posted" },
+    ],
+    filters: [
+      { key: "tag", label: "Tag", options: ["Travel", "Tourism", "Transport", "Culture"] },
+    ],
+    fields: [
+      { key: "title", label: "Title", type: "text", required: true, group: "Basic" },
+      { key: "tag", label: "Tag", type: "select", options: ["Travel", "Tourism", "Transport", "Culture", "Other"], group: "Basic" },
+      { key: "time", label: "Posted (relative)", type: "text", group: "Basic", hint: "E.g. \"2 hrs ago\"." },
+      { key: "image", label: "Image URL", type: "url", group: "Media" },
+      { key: "description", label: "Short description", type: "textarea", group: "Content" },
+      { key: "detailed_description", label: "Full HTML body", type: "textarea", group: "Content", hint: "HTML allowed." },
+    ],
+  },
+
+  users: {
+    key: "users",
+    label: "Users",
+    labelOne: "User",
+    app: "Authentication & Authorization",
+    icon: "👤",
+    searchFields: ["username", "email", "role"],
+    listColumns: [
+      { key: "username", label: "Username", primary: true },
+      { key: "email", label: "Email" },
+      { key: "role", label: "Role", type: "badge" },
+      { key: "isStaff", label: "Staff", type: "bool" },
+      { key: "isActive", label: "Active", type: "bool" },
+      { key: "joined", label: "Joined" },
+    ],
+    filters: [
+      { key: "role", label: "Role", options: ["Administrator", "Editor", "Viewer"] },
+    ],
+    fields: [
+      { key: "username", label: "Username", type: "text", required: true, group: "Account" },
+      { key: "email", label: "Email", type: "email", required: true, group: "Account" },
+      { key: "role", label: "Role", type: "select", options: ["Administrator", "Editor", "Viewer"], group: "Permissions" },
+      { key: "isStaff", label: "Staff status", type: "checkbox", group: "Permissions", hint: "Designates whether the user can log into this admin site." },
+      { key: "isActive", label: "Active", type: "checkbox", group: "Permissions" },
+      { key: "joined", label: "Date joined", type: "text", group: "Account", hint: "YYYY-MM-DD" },
+    ],
+  },
+};
+
+export const APPS = [
+  {
+    name: "Geography",
+    icon: "🌍",
+    models: ["countries", "attractions"],
+  },
+  {
+    name: "Content",
+    icon: "📰",
+    models: ["news"],
+  },
+  {
+    name: "Authentication & Authorization",
+    icon: "🔐",
+    models: ["users"],
+  },
+];

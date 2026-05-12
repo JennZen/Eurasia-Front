@@ -13,6 +13,8 @@ import AttractionPage from "./pages/AttractionPage";
 import LikedAttractions from "./pages/LikedAttractions";
 import Quiz from "./pages/Quiz";
 import ProfilePage from "./pages/ProfilePage";
+import NotFound from "./pages/NotFound";
+import Unauthorized from "./pages/Unauthorized";
 import { AdminAuthProvider } from "./admin/AdminAuthContext";
 import AdminLayout from "./admin/AdminLayout";
 import AdminLogin from "./admin/pages/AdminLogin";
@@ -57,6 +59,11 @@ function App() {
               <Route path=":model" element={<AdminList />} />
               <Route path=":model/:id" element={<AdminForm />} />
             </Route>
+
+            <Route path="/401" element={<Unauthorized />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/404" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </PublicShell>
       </AdminAuthProvider>

@@ -8,16 +8,16 @@ const USERS_KEY = "admin_users_v1";
 const LOG_KEY = "admin_actionlog_v1";
 
 const seedNews = [
-  { id: 1, title: "New direct flights connect Europe and Central Asia", tag: "Travel", time: "2 hrs ago", description: "New routes link European cities with Central Asia destinations." },
-  { id: 2, title: "Japan sees record tourism numbers in early 2026", tag: "Tourism", time: "5 hrs ago", description: "Cherry blossom season draws millions of travellers." },
-  { id: 3, title: "European trains add more cross-border night routes", tag: "Transport", time: "1 day ago", description: "Night-train networks expand across Europe." },
+  { id: 1, title: "New direct flights connect Europe and Central Asia", description: "New routes link European cities with Central Asia destinations.", imageUrl: "", publishedAt: "2026-05-10T09:00:00" },
+  { id: 2, title: "Japan sees record tourism numbers in early 2026",   description: "Cherry blossom season draws millions of travellers.",            imageUrl: "", publishedAt: "2026-05-08T12:00:00" },
+  { id: 3, title: "European trains add more cross-border night routes", description: "Night-train networks expand across Europe.",                     imageUrl: "", publishedAt: "2026-05-01T08:00:00" },
 ];
 
 const seedUsers = [
-  { id: 1, username: "admin", email: "admin@eurasia.local", role: "Administrator", isStaff: true, isActive: true, joined: "2026-01-12" },
-  { id: 2, username: "anna",  email: "anna@example.com",     role: "Editor",        isStaff: true, isActive: true, joined: "2026-02-04" },
-  { id: 3, username: "mike",  email: "mike@example.com",     role: "Viewer",        isStaff: false, isActive: true, joined: "2026-03-15" },
-  { id: 4, username: "olga",  email: "olga@example.com",     role: "Editor",        isStaff: true, isActive: false, joined: "2026-03-21" },
+  { id: 1, name: "admin", email: "admin@eurasia.local", role: "Admin",  avatarUrl: "", phone: "", token: "" },
+  { id: 2, name: "anna",  email: "anna@example.com",    role: "Editor", avatarUrl: "", phone: "", token: "" },
+  { id: 3, name: "mike",  email: "mike@example.com",    role: "User",   avatarUrl: "", phone: "", token: "" },
+  { id: 4, name: "olga",  email: "olga@example.com",    role: "Editor", avatarUrl: "", phone: "", token: "" },
 ];
 
 function loadOrSeed(key, seed) {

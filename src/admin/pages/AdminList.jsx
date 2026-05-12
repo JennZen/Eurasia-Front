@@ -5,12 +5,32 @@ import { STORE, logAction } from "../adminStore";
 
 const PAGE_SIZE = 12;
 
+function readField(col, row) {
+  const candidates = [col.key, ...(col.aliases || [])];
+  for (const k of candidates) {
+    const v = row[k];
+    if (v !== undefined && v !== null && v !== "") return v;
+  }
+  return undefined;
+}
+
 function CellRenderer({ col, row }) {
-  const v = row[col.key];
+  const v = readField(col, row);
   if (col.type === "image") {
     if (!v) return <span style={{ color: "#bbb" }}>—</span>;
     const src = typeof v === "string" && v.startsWith("//") ? `https:${v}` : v;
-    return <img className={col.key === "flag" ? "admin-table__flag" : "admin-table__thumb"} src={src} alt="" />;
+    const flagKeys = ["flag", "flagUrl"];
+    const isFlag = flagKeys.includes(col.key) || (col.aliases || []).some((a) => flagKeys.includes(a));
+    return <img className={isFlag ? "admin-table__flag" : "admin-table__thumb"} src={src} alt="" />;
+  }
+  if (col.type === "tags") {
+    const list = Array.isArray(v) ? v : (v ? [v] : []);
+    if (list.length === 0) return <span style={{ color: "#bbb" }}>—</span>;
+    return (
+      <span className="admin-tags-cell">
+        {list.map((t) => <span key={t} className="admin-badge">{String(t)}</span>)}
+      </span>
+    );
   }
   if (col.type === "badge") {
     return v ? <span className="admin-badge">{String(v)}</span> : <span style={{ color: "#bbb" }}>—</span>;
@@ -19,6 +39,18 @@ function CellRenderer({ col, row }) {
     return v
       ? <span className="admin-badge admin-badge--success">Yes</span>
       : <span className="admin-badge admin-badge--muted">No</span>;
+  }
+  if (col.type === "datetime" || col.type === "date") {
+    if (!v) return <span style={{ color: "#bbb" }}>—</span>;
+    const d = new Date(v);
+    if (Number.isNaN(d.getTime())) return String(v);
+    return col.type === "date" ? d.toLocaleDateString() : d.toLocaleString();
+  }
+  if (col.type === "number") {
+    if (v === undefined || v === null || v === "") return <span style={{ color: "#bbb" }}>—</span>;
+    const n = Number(v);
+    if (Number.isFinite(n)) return n.toLocaleString();
+    return String(v);
   }
   if (v === undefined || v === null || v === "") return <span style={{ color: "#bbb" }}>—</span>;
   const s = String(v);
@@ -63,6 +95,7 @@ export default function AdminList() {
   const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
 
   const filtered = useMemo(() => {
+    const filterDefs = Object.fromEntries(schema.filters.map((f) => [f.key, f]));
     return rows.filter((r) => {
       if (q) {
         const hit = schema.searchFields.some((f) =>
@@ -71,11 +104,22 @@ export default function AdminList() {
         if (!hit) return false;
       }
       for (const [k, v] of Object.entries(filterValues)) {
-        if (String(r[k] ?? "") !== v) return false;
+        const def = filterDefs[k];
+        const candidates = [k, ...((def && def.aliases) || [])];
+        let val;
+        for (const c of candidates) {
+          if (r[c] !== undefined && r[c] !== null && r[c] !== "") { val = r[c]; break; }
+        }
+        if (def && def.matchType === "listIncludes") {
+          const list = Array.isArray(val) ? val : (val ? [val] : []);
+          if (!list.map(String).includes(v)) return false;
+        } else {
+          if (String(val ?? "") !== v) return false;
+        }
       }
       return true;
     });
-  }, [rows, q, JSON.stringify(filterValues)]);
+  }, [rows, q, JSON.stringify(filterValues), schema.filters]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);

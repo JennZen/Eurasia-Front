@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { APPS, SCHEMAS } from "../schemas";
 import { STORE, getActionLog } from "../adminStore";
+import { adminApi } from "../adminApi";
 
 function timeAgo(iso) {
   const ms = Date.now() - new Date(iso).getTime();
@@ -15,12 +16,38 @@ function timeAgo(iso) {
 }
 
 export default function AdminDashboard() {
-  const stats = useMemo(() => ({
+  const localStats = useMemo(() => ({
     countries: STORE.countries.get().length,
     attractions: STORE.attractions.get().length,
     news: STORE.news.get().length,
     users: STORE.users.get().length,
   }), []);
+
+  const [stats, setStats] = useState(localStats);
+  const [source, setSource] = useState("local");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    adminApi.getDashboardStats()
+      .then((dto) => {
+        if (cancelled || !dto) return;
+        setStats({
+          countries: dto.countries ?? 0,
+          attractions: dto.attractions ?? 0,
+          news: dto.news ?? 0,
+          users: dto.users ?? 0,
+        });
+        setSource("api");
+        setError("");
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setSource("local");
+        setError(err.message || "API unavailable — showing local store counts.");
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   const log = useMemo(() => getActionLog(), []);
 
@@ -28,7 +55,18 @@ export default function AdminDashboard() {
     <>
       <div className="admin-page-head">
         <h1>Site administration</h1>
+        <div className="actions">
+          <span className={`admin-badge${source === "api" ? " admin-badge--success" : " admin-badge--muted"}`}>
+            {source === "api" ? "Live stats" : "Local stats"}
+          </span>
+        </div>
       </div>
+
+      {source !== "api" && error && (
+        <div className="admin-alert admin-alert--warning" style={{ marginBottom: 12 }}>
+          {error}
+        </div>
+      )}
 
       <div className="admin-stats">
         <div className="admin-stat">

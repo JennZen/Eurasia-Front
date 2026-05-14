@@ -1,12 +1,51 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import newsData from "../data/latestNewsData";
+import newsFallback from "../data/latestNewsData";
+import { newsApi } from "../services/api";
 import "../styles/latest-news.css";
+
+const formatTime = (iso) => {
+  if (!iso) return "";
+  try {
+    const date = new Date(iso);
+    return date.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  } catch {
+    return "";
+  }
+};
+
+const normalize = (item) => ({
+  id: item.id,
+  title: item.title,
+  description: item.description,
+  image: item.imageUrl || item.image,
+  time: item.publishedAt ? formatTime(item.publishedAt) : item.time,
+  tag: item.tag || "News",
+  detailed_description: item.detailed_description || `<p>${item.description || ""}</p>`,
+});
 
 const LatestNewsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state || {};
+
+  const [items, setItems] = useState(() => newsFallback.map(normalize));
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await newsApi.getAll();
+        if (!active || !Array.isArray(data)) return;
+        setItems(data.map(normalize));
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!state.source || !state.selectedNewsId) {
@@ -14,7 +53,8 @@ const LatestNewsPage = () => {
     }
   }, [navigate, state]);
 
-  const selected = newsData.find((item) => item.id === state.selectedNewsId) || newsData[0];
+  const selected = items.find((item) => item.id === state.selectedNewsId) || items[0];
+  if (!selected) return null;
 
   return (
     <section className="latest-news">
@@ -31,7 +71,7 @@ const LatestNewsPage = () => {
         </div>
 
         <div className="latest-news__bottom" style={{ marginTop: 14 }}>
-          {newsData
+          {items
             .filter((item) => item.id !== selected.id)
             .map((item) => (
               <Link

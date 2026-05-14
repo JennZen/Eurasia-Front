@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { allCountries } from "../data/allCountries";
+import { quizApi } from "../services/api";
+import { useAuth } from "../admin/AdminAuthContext";
 import "../styles/quiz.css";
 
 const TOTAL_TIME = 15 * 60;
@@ -83,12 +85,26 @@ function formatTime(seconds) {
 }
 
 const Quiz = () => {
+  const { user } = useAuth();
   const [guessed, setGuessed] = useState(new Set());
   const [input, setInput] = useState("");
   const [timeLeft, setTimeLeft] = useState(TOTAL_TIME);
   const [gameStatus, setGameStatus] = useState("idle");
   const [lastGuessed, setLastGuessed] = useState(null);
   const [mapReady, setMapReady] = useState(false);
+  const [bestRecord, setBestRecord] = useState(null);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    let active = true;
+    quizApi
+      .getUserBestRecord(user.id)
+      .then((r) => active && setBestRecord(r))
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [user?.id]);
   const inputRef = useRef(null);
   const timerRef = useRef(null);
   const mapRef = useRef(null);
@@ -96,6 +112,7 @@ const Quiz = () => {
   const geoLayersRef = useRef({});
   const guessedRef = useRef(new Set());
   const gameStatusRef = useRef("idle");
+  const timeLeftRef = useRef(TOTAL_TIME);
 
   const stopTimer = useCallback(() => {
     if (timerRef.current) {
@@ -108,7 +125,18 @@ const Quiz = () => {
     stopTimer();
     setGameStatus("ended");
     gameStatusRef.current = "ended";
-  }, [stopTimer]);
+    if (user?.id) {
+      const elapsed = TOTAL_TIME - timeLeftRef.current;
+      void quizApi
+        .updateResult({
+          countriesGuessed: guessedRef.current.size,
+          timeSpentSeconds: elapsed,
+          totalCountries: totalCount,
+        })
+        .then((r) => setBestRecord(r))
+        .catch(() => {});
+    }
+  }, [stopTimer, user?.id]);
 
   useEffect(() => {
     if (gameStatus === "playing" && timeLeft <= 0) endGame();
@@ -117,7 +145,11 @@ const Quiz = () => {
   useEffect(() => {
     if (gameStatus === "playing") {
       timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
+        setTimeLeft((prev) => {
+          const next = prev - 1;
+          timeLeftRef.current = next;
+          return next;
+        });
       }, 1000);
       return stopTimer;
     }
@@ -258,6 +290,7 @@ const Quiz = () => {
     guessedRef.current = new Set();
     setInput("");
     setTimeLeft(TOTAL_TIME);
+    timeLeftRef.current = TOTAL_TIME;
     setGameStatus("playing");
     gameStatusRef.current = "playing";
     setLastGuessed(null);

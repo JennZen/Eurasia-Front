@@ -1,0 +1,105 @@
+.error-page {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  background: linear-gradient(135deg, #0f1e3a 0%, #1a3563 50%, #2a4d8a 100%);
+  color: #fff;
+}
+
+.error-card {
+  max-width: 640px;
+  width: 100%;
+  text-align: center;
+  padding: 48px 36px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.error-code {
+  font-size: clamp(96px, 18vw, 168px);
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
+  background: linear-gradient(135deg, #6ec1ff 0%, #b89cff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.04em;
+}
+
+.error-title {
+  font-size: clamp(22px, 3vw, 32px);
+  margin: 16px 0 10px;
+  font-weight: 700;
+}
+
+.error-text {
+  font-size: 16px;
+  line-height: 1.55;
+  margin: 0 auto 28px;
+  max-width: 480px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.error-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.error-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.error-btn--primary {
+  background: #4f8ff7;
+  color: #fff;
+}
+.error-btn--primary:hover {
+  background: #3b78dc;
+  transform: translateY(-1px);
+}
+
+.error-btn--ghost {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.error-btn--ghost:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.error-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+}
+
+.error-meta {
+  margin-top: 24px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.error-meta code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}

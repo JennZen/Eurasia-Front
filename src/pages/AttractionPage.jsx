@@ -1,16 +1,57 @@
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { attractions } from "../data/attractions";
+import { attractions as fallbackAttractions } from "../data/attractions";
+import { attractionsApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
 import "../styles/AttractionPage.css";
+
+const normalizeAttraction = (a) => ({
+  id: a.id,
+  name: a.name,
+  description: a.description,
+  fullDescription: a.fullDescription || a.description,
+  image: a.imageUrl || a.image,
+  heroImage: a.bGUrl || a.heroImage || a.imageUrl || a.image,
+  country: (a.countryName || a.country || "").toString().toLowerCase(),
+  countryName: a.countryName || a.country,
+  city: a.city,
+  price: typeof a.price === "number" ? `$${a.price}` : a.price,
+  duration: a.duration,
+  bestTime: a.bestTimeToVisit || a.bestTime,
+  hours: a.openingHours || a.hours,
+  rating: a.rating,
+  reviews: a.numberOfReviews ?? a.reviews,
+});
 
 const AttractionPage = () => {
   const location = useLocation();
   const { country, id } = useParams();
   const attractionId = Number(id);
   const { isLiked, toggleLike } = useLikes();
+  const [allAttractions, setAllAttractions] = useState(() => fallbackAttractions.map(normalizeAttraction));
+  const [loading, setLoading] = useState(true);
 
-  const attraction = attractions.find(
-    (item) => item.id === attractionId && item.country === country
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await attractionsApi.getAll();
+        if (!active || !Array.isArray(data) || data.length === 0) return;
+        setAllAttractions(data.map(normalizeAttraction));
+      } catch {
+        /* keep fallback */
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const attraction = useMemo(
+    () => allAttractions.find((item) => item.id === attractionId && item.country === country),
+    [allAttractions, attractionId, country]
   );
 
   const arrivedFrom = location.state?.via;
@@ -29,6 +70,7 @@ const AttractionPage = () => {
   }
 
   if (!attraction) {
+    if (loading) return <div className="attraction-page"><p style={{ padding: 40 }}>Loading…</p></div>;
     return (
       <div className="attraction-page">
         <div className="not-found">
@@ -42,7 +84,7 @@ const AttractionPage = () => {
     );
   }
 
-  const otherAttractions = attractions
+  const otherAttractions = allAttractions
     .filter((item) => item.country === attraction.country && item.id !== attraction.id)
     .slice(0, 3);
 
@@ -151,4 +193,3 @@ const AttractionPage = () => {
 };
 
 export default AttractionPage;
-

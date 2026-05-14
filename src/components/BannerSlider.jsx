@@ -1,11 +1,40 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { banners } from "../data/banners";
+import { banners as fallbackBanners } from "../data/banners";
+import { bannersApi } from "../services/api";
+
+const normalize = (b) => ({
+  id: b.id,
+  title: b.title,
+  subtitle: b.subtitle || "Take a Glimpse Into The Beautiful Country Of:",
+  image: b.imageUrl || b.image,
+  population: b.population || "",
+  territory: b.territory || "",
+  capital: b.capital || "",
+  link: b.link || `/country/${String(b.title || "").toLowerCase()}`,
+});
 
 const BannerSlider = () => {
+  const [banners, setBanners] = useState(() => fallbackBanners.map(normalize));
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progress, setProgress] = useState(0);
   const slideDuration = 4000;
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await bannersApi.getAll(4);
+        if (!active || !Array.isArray(data)) return;
+        setBanners(data.length === 0 ? [] : data.map(normalize));
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     const progressInterval = setInterval(() => {
@@ -26,12 +55,14 @@ const BannerSlider = () => {
       clearInterval(progressInterval);
       clearTimeout(slideTimer);
     };
-  }, [currentSlide]);
+  }, [currentSlide, banners.length]);
 
   const handleSlideClick = (index) => {
     setCurrentSlide(index);
     setProgress(0);
   };
+
+  if (banners.length === 0) return null;
 
   return (
     <section id="section-1">

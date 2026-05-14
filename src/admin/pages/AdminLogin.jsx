@@ -6,20 +6,27 @@ import "../../styles/admin.css";
 export default function AdminLogin() {
   const { user, login } = useAdminAuth();
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  if (user) return <Navigate to="/admin" replace />;
+  if (user && user.role === "Admin") return <Navigate to="/admin" replace />;
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setBusy(true);
     try {
-      login(username.trim(), password);
+      const logged = await login(email.trim(), password);
+      if (logged.role !== "Admin") {
+        throw new Error("This account does not have admin access.");
+      }
       navigate("/admin", { replace: true });
     } catch (err) {
       setError(err.message);
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -32,14 +39,14 @@ export default function AdminLogin() {
         </div>
         <div className="admin-login-card__body">
           {error && <div className="admin-alert admin-alert--danger">{error}</div>}
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             autoFocus
-            autoComplete="username"
+            autoComplete="email"
           />
           <label htmlFor="password">Password</label>
           <input
@@ -49,11 +56,11 @@ export default function AdminLogin() {
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
           />
-          <button className="admin-login-card__submit" type="submit">
-            Log in
+          <button className="admin-login-card__submit" type="submit" disabled={busy}>
+            {busy ? "Signing in…" : "Log in"}
           </button>
           <div className="admin-login-card__hint">
-            Demo: any username and a password ≥ 3 characters.
+            Use an account with the <b>Admin</b> role.
           </div>
         </div>
       </form>

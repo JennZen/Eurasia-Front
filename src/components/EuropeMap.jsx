@@ -1,7 +1,37 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { regions, regionColors } from "../data/regions";
+import { regions as fallbackRegions, regionColors } from "../data/regions";
+import { countriesApi } from "../services/api";
+
+const buildRegionsFromApi = (apiCountries) => {
+  // Build a name -> static entry lookup so we can borrow `center` coords (DTO has no lat/lng)
+  const staticByName = {};
+  Object.values(fallbackRegions).forEach((list) =>
+    list.forEach((c) => {
+      staticByName[c.name] = c;
+    })
+  );
+
+  const grouped = {};
+  apiCountries
+    .filter((c) => Array.isArray(c.continents) && c.continents.includes("Europe"))
+    .forEach((c) => {
+      const region = Array.isArray(c.regions) && c.regions.length
+        ? String(c.regions[0]).toLowerCase()
+        : null;
+      if (!region) return;
+      const fallback = staticByName[c.name];
+      const entry = {
+        name: c.name,
+        center: fallback?.center || [54, 15],
+        flag: c.flagUrl || fallback?.flag || "",
+      };
+      if (!grouped[region]) grouped[region] = [];
+      grouped[region].push(entry);
+    });
+  return grouped;
+};
 
 const EuropeMap = () => {
   const mapRef = useRef(null);
@@ -14,6 +44,29 @@ const EuropeMap = () => {
   const [openRegions, setOpenRegions] = useState({});
   const [visibleRegionButtons, setVisibleRegionButtons] = useState(true);
   const [activeRegionButton, setActiveRegionButton] = useState(null);
+  const [apiRegions, setApiRegions] = useState(null);
+
+  const regions = useMemo(
+    () => (apiRegions && Object.keys(apiRegions).length ? apiRegions : fallbackRegions),
+    [apiRegions]
+  );
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await countriesApi.getAll();
+        if (!active || !Array.isArray(data)) return;
+        const built = buildRegionsFromApi(data);
+        if (Object.keys(built).length) setApiRegions(built);
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const getHeatColor = (pop) => {
     return pop > 80000000

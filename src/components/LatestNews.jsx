@@ -1,12 +1,54 @@
-﻿import "../styles/latest-news.css";
+import { useEffect, useState } from "react";
+import "../styles/latest-news.css";
 import { Link } from "react-router-dom";
-import newsData from "../data/latestNewsData";
+import newsFallback from "../data/latestNewsData";
+import { newsApi } from "../services/api";
+
+const formatTime = (iso) => {
+  if (!iso) return "";
+  try {
+    const date = new Date(iso);
+    return date.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  } catch {
+    return "";
+  }
+};
+
+const normalize = (item) => ({
+  id: item.id,
+  title: item.title,
+  description: item.description,
+  image: item.imageUrl || item.image,
+  time: item.publishedAt ? formatTime(item.publishedAt) : item.time,
+  tag: item.tag || "News",
+});
 
 const LatestNews = () => {
-  const featured = newsData[0];
-  const sideNews = newsData.slice(1, 4);
-  const bottomNews = newsData.slice(4, 9);
+  const [items, setItems] = useState(() => newsFallback.map(normalize));
+  const [source, setSource] = useState("local");
 
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await newsApi.getAll();
+        if (!active || !Array.isArray(data)) return;
+        setItems(data.map(normalize));
+        setSource("live");
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (items.length === 0) return null;
+
+  const featured = items[0];
+  const sideNews = items.slice(1, 4);
+  const bottomNews = items.slice(4, 9);
   const baseState = { source: "home" };
 
   return (
@@ -75,6 +117,11 @@ const LatestNews = () => {
             </Link>
           ))}
         </div>
+        {source === "local" && (
+          <p style={{ textAlign: "center", opacity: 0.5, fontSize: 12, marginTop: 8 }}>
+            Showing offline news (backend unreachable)
+          </p>
+        )}
       </div>
     </section>
   );

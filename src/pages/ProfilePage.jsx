@@ -1,41 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import {
-  getUserProfile,
-  updateUserProfile,
-} from "../services/mockUserService";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "../admin/AdminAuthContext";
+import { usersApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
-import { attractions } from "../data/attractions";
-import { allCountries } from "../data/allCountries";
+
+const fmtNumber = (n) => (typeof n === "number" ? n.toLocaleString() : n || "—");
+const fmtArea = (n) => (typeof n === "number" ? `${n.toLocaleString()} km²` : n || "—");
+const fmtPrice = (p) => (typeof p === "number" ? `$${p}` : p || "—");
 
 export default function ProfilePage() {
+  const { user: authUser, updateUser: updateAuthUser } = useAuth();
   const [activeTab, setActiveTab] = useState("countries");
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "" });
 
-  const { likes, toggleLike, countryLikes, toggleCountryLike } = useLikes();
-
-  const likedCountries = allCountries.filter((c) =>
-    countryLikes.includes(c.name)
-  );
-  const likedAttractions = attractions.filter((a) => likes.includes(a.id));
+  const {
+    likedAttractionsData: likedAttractions,
+    likedCountriesData: likedCountries,
+    toggleLike,
+    toggleCountryLike,
+  } = useLikes();
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const userData = await getUserProfile();
-        setUser(userData);
-      } catch (error) {
-        console.error("Failed to load profile data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (!authUser) {
+      setIsLoading(false);
+      return;
+    }
+    // GET /api/users/{id} is Admin-only; build profile from auth context instead.
+    setUser({
+      id: authUser.id ?? null,
+      name: authUser.displayName || authUser.name || authUser.email || "Traveler",
+      email: authUser.email || "",
+      phone: authUser.phone || "",
+      avatarUrl: authUser.avatarUrl || "",
+    });
+    setIsLoading(false);
+  }, [authUser?.id, authUser?.displayName, authUser?.name, authUser?.email, authUser?.phone, authUser?.avatarUrl]);
 
-    loadData();
-  }, []);
+  if (!authUser) {
+    return <Navigate to="/login" replace state={{ from: "/profile" }} />;
+  }
 
   const handleEditOpen = () => {
     setFormData({ name: user.name, phone: user.phone || "", avatarUrl: user.avatarUrl || "" });
@@ -51,12 +57,26 @@ export default function ProfilePage() {
   };
 
   const handleSave = async () => {
+    if (!authUser?.id) {
+      alert("Cannot save: missing user id. Please sign in again.");
+      return;
+    }
     try {
-      const updated = await updateUserProfile(formData);
-      setUser(updated);
+      const updated = await usersApi.update(authUser.id, {
+        name: formData.name,
+        phone: formData.phone,
+        avatarUrl: formData.avatarUrl,
+      });
+      updateAuthUser && updateAuthUser({
+        displayName: updated.name,
+        avatarUrl: updated.avatarUrl,
+        phone: updated.phone,
+      });
+      setUser((prev) => ({ ...prev, ...updated }));
       setIsEditing(false);
     } catch (e) {
       console.error(e);
+      alert(e.message || "Failed to update profile");
     }
   };
 
@@ -83,7 +103,19 @@ export default function ProfilePage() {
     );
   }
 
-  const initials = user.name
+  if (!user) {
+    return (
+      <div className="profile-page">
+        <div className="profile-container">
+          <div className="card profile-header">
+            <p>Failed to load profile.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const initials = (user.name || "?")
     .split(" ")
     .map((n) => n[0])
     .join("")
@@ -161,12 +193,12 @@ export default function ProfilePage() {
             ) : (
               likedCountries.map((c) => (
                 <div
-                  key={c.name}
+                  key={c.id}
                   className="card card-hover country-card-v2"
                 >
                   <div className="country-card-img-wrap">
                     <img
-                      src={c.flag}
+                      src={c.flagUrl}
                       alt={`${c.name} flag`}
                       className="country-card-img"
                       onError={(e) => {
@@ -174,7 +206,7 @@ export default function ProfilePage() {
                       }}
                     />
                     <div className="country-card-img-overlay" />
-                    <span className="country-card-region">{c.region}</span>
+                    <span className="country-card-region">{c.region || "—"}</span>
                     <button
                       className="country-card-remove"
                       onClick={() => toggleCountryLike(c.name)}
@@ -191,20 +223,19 @@ export default function ProfilePage() {
                     </div>
                   </div>
                   <div className="country-card-body">
-                    <p className="country-card-desc">{c.description}</p>
                     <div className="country-card-meta">
                       <div className="country-card-meta-item">
                         <i className="fas fa-users" />
                         <div>
                           <span className="country-card-meta-label">Population</span>
-                          <span className="country-card-meta-value">{c.population}</span>
+                          <span className="country-card-meta-value">{fmtNumber(c.population)}</span>
                         </div>
                       </div>
                       <div className="country-card-meta-item">
                         <i className="fas fa-ruler-combined" />
                         <div>
                           <span className="country-card-meta-label">Area</span>
-                          <span className="country-card-meta-value">{c.area}</span>
+                          <span className="country-card-meta-value">{fmtArea(c.geographicalSize)}</span>
                         </div>
                       </div>
                     </div>
@@ -229,11 +260,13 @@ export default function ProfilePage() {
                 No favorite attractions yet.
               </div>
             ) : (
-              likedAttractions.map((a) => (
+              likedAttractions.map((a) => {
+                const countrySlug = (a.countryName || "").toLowerCase();
+                return (
                 <div key={a.id} className="card card-hover attraction-card">
                   <div className="attraction-img-wrap">
                     <img
-                      src={a.image}
+                      src={a.imageUrl || a.bGUrl}
                       alt={a.name}
                       className="attraction-img"
                       onError={(e) => {
@@ -243,7 +276,7 @@ export default function ProfilePage() {
                     <div className="attraction-img-overlay" />
                     <span className="attraction-rating">
                       <i className="fas fa-star" style={{ marginRight: 4 }} />
-                      {a.rating}
+                      {a.rating ?? "—"}
                     </span>
                     <button
                       className="attraction-remove"
@@ -256,7 +289,7 @@ export default function ProfilePage() {
                       <h3 className="attraction-title">{a.name}</h3>
                       <p className="attraction-location">
                         <i className="fas fa-map-pin" style={{ marginRight: 6 }} />
-                        {a.city}
+                        {a.city || "—"}
                       </p>
                     </div>
                   </div>
@@ -265,24 +298,24 @@ export default function ProfilePage() {
                     <div className="attraction-meta">
                       <div className="attraction-meta-item">
                         <i className="fas fa-clock" />
-                        <span>{a.duration}</span>
+                        <span>{a.duration || "—"}</span>
                       </div>
                       <div className="attraction-meta-item">
                         <i className="fas fa-sun" />
-                        <span>{a.bestTime}</span>
+                        <span>{a.bestTimeToVisit || "—"}</span>
                       </div>
                       <div className="attraction-meta-item">
                         <i className="fas fa-door-open" />
-                        <span>{a.hours}</span>
+                        <span>{a.openingHours || "—"}</span>
                       </div>
                     </div>
                     <div className="attraction-footer">
                       <span className="attraction-price-tag">
                         <span className="attraction-price-label">from</span>
-                        {a.price}
+                        {fmtPrice(a.price)}
                       </span>
                       <Link
-                        to={`/attractions/${a.country}/${a.id}`}
+                        to={`/attractions/${countrySlug}/${a.id}`}
                         state={{ via: "catalog" }}
                         className="profile-view-btn"
                       >
@@ -291,7 +324,7 @@ export default function ProfilePage() {
                     </div>
                   </div>
                 </div>
-              ))
+              );})
             )}
           </div>
         )}

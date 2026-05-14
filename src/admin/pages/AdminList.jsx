@@ -1,16 +1,36 @@
 import { useMemo, useState, useEffect } from "react";
 import { Link, useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { SCHEMAS } from "../schemas";
-import { STORE, logAction } from "../adminStore";
+import { RESOURCES } from "../adminResources";
 
 const PAGE_SIZE = 12;
 
+function readField(col, row) {
+  const candidates = [col.key, ...(col.aliases || [])];
+  for (const k of candidates) {
+    const v = row[k];
+    if (v !== undefined && v !== null && v !== "") return v;
+  }
+  return undefined;
+}
+
 function CellRenderer({ col, row }) {
-  const v = row[col.key];
+  const v = readField(col, row);
   if (col.type === "image") {
     if (!v) return <span style={{ color: "#bbb" }}>—</span>;
     const src = typeof v === "string" && v.startsWith("//") ? `https:${v}` : v;
-    return <img className={col.key === "flag" ? "admin-table__flag" : "admin-table__thumb"} src={src} alt="" />;
+    const flagKeys = ["flag", "flagUrl"];
+    const isFlag = flagKeys.includes(col.key) || (col.aliases || []).some((a) => flagKeys.includes(a));
+    return <img className={isFlag ? "admin-table__flag" : "admin-table__thumb"} src={src} alt="" />;
+  }
+  if (col.type === "tags") {
+    const list = Array.isArray(v) ? v : (v ? [v] : []);
+    if (list.length === 0) return <span style={{ color: "#bbb" }}>—</span>;
+    return (
+      <span className="admin-tags-cell">
+        {list.map((t) => <span key={t} className="admin-badge">{String(t)}</span>)}
+      </span>
+    );
   }
   if (col.type === "badge") {
     return v ? <span className="admin-badge">{String(v)}</span> : <span style={{ color: "#bbb" }}>—</span>;
@@ -20,6 +40,18 @@ function CellRenderer({ col, row }) {
       ? <span className="admin-badge admin-badge--success">Yes</span>
       : <span className="admin-badge admin-badge--muted">No</span>;
   }
+  if (col.type === "datetime" || col.type === "date") {
+    if (!v) return <span style={{ color: "#bbb" }}>—</span>;
+    const d = new Date(v);
+    if (Number.isNaN(d.getTime())) return String(v);
+    return col.type === "date" ? d.toLocaleDateString() : d.toLocaleString();
+  }
+  if (col.type === "number") {
+    if (v === undefined || v === null || v === "") return <span style={{ color: "#bbb" }}>—</span>;
+    const n = Number(v);
+    if (Number.isFinite(n)) return n.toLocaleString();
+    return String(v);
+  }
   if (v === undefined || v === null || v === "") return <span style={{ color: "#bbb" }}>—</span>;
   const s = String(v);
   return s.length > 80 ? s.slice(0, 80) + "…" : s;
@@ -28,18 +60,39 @@ function CellRenderer({ col, row }) {
 export default function AdminList() {
   const { model } = useParams();
   const schema = SCHEMAS[model];
+  const resource = RESOURCES[model];
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [rows, setRows] = useState(() => (schema ? STORE[model].get() : []));
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [selected, setSelected] = useState(new Set());
   const [bulkAction, setBulkAction] = useState("");
+  const [busy, setBusy] = useState(false);
   const [flash, setFlash] = useState(searchParams.get("flash") || "");
 
   useEffect(() => {
-    if (!schema) return;
-    setRows(STORE[model].get());
-    setSelected(new Set());
-  }, [model, schema]);
+    if (!schema || !resource) return;
+    let active = true;
+    setLoading(true);
+    setLoadError("");
+    resource
+      .list()
+      .then((data) => {
+        if (!active) return;
+        setRows(Array.isArray(data) ? data : []);
+        setSelected(new Set());
+      })
+      .catch((e) => {
+        if (!active) return;
+        setLoadError(e.message || "Failed to load.");
+        setRows([]);
+      })
+      .finally(() => active && setLoading(false));
+    return () => {
+      active = false;
+    };
+  }, [model, schema, resource]);
 
   useEffect(() => {
     if (flash) {
@@ -63,6 +116,7 @@ export default function AdminList() {
   const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
 
   const filtered = useMemo(() => {
+    const filterDefs = Object.fromEntries(schema.filters.map((f) => [f.key, f]));
     return rows.filter((r) => {
       if (q) {
         const hit = schema.searchFields.some((f) =>
@@ -71,11 +125,22 @@ export default function AdminList() {
         if (!hit) return false;
       }
       for (const [k, v] of Object.entries(filterValues)) {
-        if (String(r[k] ?? "") !== v) return false;
+        const def = filterDefs[k];
+        const candidates = [k, ...((def && def.aliases) || [])];
+        let val;
+        for (const c of candidates) {
+          if (r[c] !== undefined && r[c] !== null && r[c] !== "") { val = r[c]; break; }
+        }
+        if (def && def.matchType === "listIncludes") {
+          const list = Array.isArray(val) ? val : (val ? [val] : []);
+          if (!list.map(String).includes(v)) return false;
+        } else {
+          if (String(val ?? "") !== v) return false;
+        }
       }
       return true;
     });
-  }, [rows, q, JSON.stringify(filterValues)]);
+  }, [rows, q, JSON.stringify(filterValues), schema.filters]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
@@ -108,17 +173,24 @@ export default function AdminList() {
     setSelected(next);
   };
 
-  const runBulk = () => {
-    if (!bulkAction || selected.size === 0) return;
+  const runBulk = async () => {
+    if (!bulkAction || selected.size === 0 || !resource) return;
     if (bulkAction === "delete") {
       if (!window.confirm(`Delete ${selected.size} ${schema.label.toLowerCase()}? This cannot be undone.`)) return;
-      const remaining = rows.filter((r) => !selected.has(r.id));
-      STORE[model].set(remaining);
-      setRows(remaining);
-      logAction({ type: "del", model, label: `${selected.size} item(s)` });
-      setFlash(`Deleted ${selected.size} ${schema.label.toLowerCase()}.`);
-      setSelected(new Set());
-      setBulkAction("");
+      setBusy(true);
+      try {
+        await resource.bulkRemove(Array.from(selected));
+        const refreshed = await resource.list();
+        setRows(refreshed);
+        setFlash(`Deleted ${selected.size} ${schema.label.toLowerCase()}.`);
+      } catch (e) {
+        setFlash("");
+        alert(`Bulk delete failed: ${e.message}`);
+      } finally {
+        setBusy(false);
+        setSelected(new Set());
+        setBulkAction("");
+      }
     }
   };
 
@@ -136,6 +208,7 @@ export default function AdminList() {
       </div>
 
       {flash && <div className="admin-alert admin-alert--success">{flash}</div>}
+      {loadError && <div className="admin-alert admin-alert--danger">Failed to load {schema.label.toLowerCase()}: {loadError}</div>}
 
       <form className="admin-toolbar" onSubmit={onSearch}>
         <div className="admin-search">
@@ -180,8 +253,8 @@ export default function AdminList() {
               <option value="">Action…</option>
               <option value="delete">Delete selected {schema.label.toLowerCase()}</option>
             </select>
-            <button type="button" className="admin-btn admin-btn--sm" onClick={runBulk} disabled={!bulkAction}>
-              Go
+            <button type="button" className="admin-btn admin-btn--sm" onClick={runBulk} disabled={!bulkAction || busy}>
+              {busy ? "Working…" : "Go"}
             </button>
           </div>
         )}
@@ -203,7 +276,13 @@ export default function AdminList() {
             </tr>
           </thead>
           <tbody>
-            {slice.length === 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan={schema.listColumns.length + 1} className="admin-empty">
+                  Loading…
+                </td>
+              </tr>
+            ) : slice.length === 0 ? (
               <tr>
                 <td colSpan={schema.listColumns.length + 1} className="admin-empty">
                   No {schema.label.toLowerCase()} found.

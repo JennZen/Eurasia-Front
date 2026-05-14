@@ -1,7 +1,36 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { asiaRegions, asiaRegionColors } from "../data/asiaRegions";
+import { asiaRegions as fallbackAsiaRegions, asiaRegionColors } from "../data/asiaRegions";
+import { countriesApi } from "../services/api";
+
+const buildAsiaRegionsFromApi = (apiCountries) => {
+  const staticByName = {};
+  Object.values(fallbackAsiaRegions).forEach((list) =>
+    list.forEach((c) => {
+      staticByName[c.name] = c;
+    })
+  );
+
+  const grouped = {};
+  apiCountries
+    .filter((c) => Array.isArray(c.continents) && c.continents.includes("Asia"))
+    .forEach((c) => {
+      const region = Array.isArray(c.regions) && c.regions.length
+        ? String(c.regions[0]).toLowerCase()
+        : null;
+      if (!region) return;
+      const fallback = staticByName[c.name];
+      const entry = {
+        name: c.name,
+        center: fallback?.center || [30, 80],
+        flag: c.flagUrl || fallback?.flag || "",
+      };
+      if (!grouped[region]) grouped[region] = [];
+      grouped[region].push(entry);
+    });
+  return grouped;
+};
 
 const AsiaMap = () => {
   const mapRef = useRef(null);
@@ -14,6 +43,29 @@ const AsiaMap = () => {
   const [openRegions, setOpenRegions] = useState({});
   const [visibleRegionButtons, setVisibleRegionButtons] = useState(true);
   const [activeRegionButton, setActiveRegionButton] = useState(null);
+  const [apiRegions, setApiRegions] = useState(null);
+
+  const asiaRegions = useMemo(
+    () => (apiRegions && Object.keys(apiRegions).length ? apiRegions : fallbackAsiaRegions),
+    [apiRegions]
+  );
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await countriesApi.getAll();
+        if (!active || !Array.isArray(data)) return;
+        const built = buildAsiaRegionsFromApi(data);
+        if (Object.keys(built).length) setApiRegions(built);
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const getHeatColor = (pop) => {
     return pop > 500000000

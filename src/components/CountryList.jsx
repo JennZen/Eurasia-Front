@@ -1,21 +1,70 @@
-import { useState, useMemo } from "react";
-import { allCountries } from "../data/allCountries";
+import { useEffect, useMemo, useState } from "react";
+import { allCountries as fallbackCountries } from "../data/allCountries";
+import { countriesApi } from "../services/api";
 import { Link } from "react-router-dom";
 import "../styles/country-list.css";
 
+const formatPopulation = (n) => {
+  if (n === null || n === undefined) return "—";
+  if (typeof n === "string") return n;
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
+  return String(n);
+};
+
+const formatArea = (n) => {
+  if (n === null || n === undefined) return "—";
+  if (typeof n === "string") return n;
+  return `${n.toLocaleString()} km²`;
+};
+
+const normalize = (c) => {
+  // If item already has frontend-shaped string fields, pass through
+  if (typeof c.population === "string" && typeof c.area === "string" && c.continent) return c;
+  const continent = Array.isArray(c.continents) && c.continents.length ? c.continents[0] : c.continent || "";
+  const region = Array.isArray(c.regions) && c.regions.length ? c.regions[0] : c.region || "";
+  return {
+    id: c.id,
+    name: c.name,
+    capital: c.capital || "",
+    population: typeof c.population === "number" ? formatPopulation(c.population) : c.population || "",
+    area: typeof c.geographicalSize === "number" ? formatArea(c.geographicalSize) : c.area || "",
+    continent,
+    region,
+    flag: c.flagUrl || c.flag || "",
+  };
+};
+
 const CountryList = ({ continent }) => {
+  const [allItems, setAllItems] = useState(() => fallbackCountries.map(normalize));
   const [search, setSearch] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("All");
   const [page, setPage] = useState(1);
   const perPage = 10;
 
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await countriesApi.getAll();
+        if (!active || !Array.isArray(data)) return;
+        setAllItems(data.map(normalize));
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const countries = useMemo(
-    () => allCountries.filter((c) => c.continent === continent),
-    [continent]
+    () => allItems.filter((c) => c.continent === continent),
+    [allItems, continent]
   );
 
   const regions = useMemo(() => {
-    const set = new Set(countries.map((c) => c.region));
+    const set = new Set(countries.map((c) => c.region).filter(Boolean));
     return ["All", ...Array.from(set).sort()];
   }, [countries]);
 
@@ -25,8 +74,8 @@ const CountryList = ({ continent }) => {
       const matchSearch =
         c.name.toLowerCase().includes(q) ||
         c.capital.toLowerCase().includes(q) ||
-        c.population.toLowerCase().includes(q) ||
-        c.area.toLowerCase().includes(q);
+        String(c.population).toLowerCase().includes(q) ||
+        String(c.area).toLowerCase().includes(q);
       const matchRegion = selectedRegion === "All" || c.region === selectedRegion;
       return matchSearch && matchRegion;
     });
@@ -38,7 +87,6 @@ const CountryList = ({ continent }) => {
   const startIdx = (page - 1) * perPage + 1;
   const endIdx = Math.min(page * perPage, filtered.length);
 
-  // Reset page when filters change
   const handleSearch = (e) => {
     setSearch(e.target.value);
     setPage(1);
@@ -116,8 +164,8 @@ const CountryList = ({ continent }) => {
           <div className="country-cards-grid">
             {paginated.map((country) => (
               <Link
-                key={country.name}
-                to={`/countries/${country.name}`}
+                key={country.id ?? country.name}
+                to={`/country/${country.name.toLowerCase()}`}
                 className="country-card-link"
               >
                 <article className="country-card-item">

@@ -1,25 +1,71 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { allCountries } from "../data/allCountries";
+import { allCountries as fallbackCountries } from "../data/allCountries";
+import { countriesApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
 import "../styles/countries.css";
 
 const parsePopulation = (str) => {
-  const num = parseFloat(str.replace(/,/g, ""));
+  if (typeof str === "number") return str;
+  const num = parseFloat(String(str || "").replace(/,/g, ""));
   return isNaN(num) ? 0 : num;
 };
 
 const parseArea = (str) => {
-  const num = parseFloat(str.replace(/,/g, "").replace(" km²", ""));
+  if (typeof str === "number") return str;
+  const num = parseFloat(String(str || "").replace(/,/g, "").replace(" km²", ""));
   return isNaN(num) ? 0 : num;
+};
+
+const formatPopulation = (n) => {
+  if (!n) return "—";
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
+  return String(n);
+};
+
+const formatArea = (n) => (n ? `${n.toLocaleString()} km²` : "—");
+
+const normalizeCountry = (c) => {
+  if (c.continent && typeof c.population === "string") return c;
+  const continent = Array.isArray(c.continents) && c.continents.length ? c.continents[0] : c.continent || "";
+  const region = Array.isArray(c.regions) && c.regions.length ? c.regions[0] : c.region || "";
+  return {
+    id: c.id,
+    name: c.name,
+    capital: c.capital,
+    population: typeof c.population === "number" ? formatPopulation(c.population) : c.population,
+    area: typeof c.geographicalSize === "number" ? formatArea(c.geographicalSize) : c.area,
+    continent,
+    region,
+    flag: c.flagUrl || c.flag,
+    description: c.description || `${c.name}. Capital: ${c.capital}.`,
+  };
 };
 
 const Countries = () => {
   const { toggleCountryLike, isCountryLiked } = useLikes();
+  const [allCountries, setAllCountries] = useState(() => fallbackCountries.map(normalizeCountry));
   const [search, setSearch] = useState("");
   const [selectedContinent, setSelectedContinent] = useState("All");
   const [selectedRegion, setSelectedRegion] = useState("All");
   const [sortBy, setSortBy] = useState("name");
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await countriesApi.getAll();
+        if (!active || !Array.isArray(data)) return;
+        setAllCountries(data.map(normalizeCountry));
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const continents = ["All", "Europe", "Asia"];
 
@@ -35,7 +81,7 @@ const Countries = () => {
           .map((c) => c.region)
       ),
     ];
-  }, [selectedContinent]);
+  }, [selectedContinent, allCountries]);
 
   const filtered = useMemo(() => {
     const result = allCountries.filter((country) => {
@@ -55,7 +101,7 @@ const Countries = () => {
       if (sortBy === "area") return parseArea(b.area) - parseArea(a.area);
       return 0;
     });
-  }, [search, selectedContinent, selectedRegion, sortBy]);
+  }, [search, selectedContinent, selectedRegion, sortBy, allCountries]);
 
   const clearFilters = () => {
     setSearch("");

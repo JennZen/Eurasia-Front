@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { attractions } from "../data/attractions";
+import { attractions as fallbackAttractions } from "../data/attractions";
 import { allCountries } from "../data/allCountries";
+import { attractionsApi, countriesApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
 import "../styles/CountryPage.css";
 
@@ -8,45 +10,77 @@ const CountryPage = () => {
   const { country } = useParams();
   const { toggleCountryLike, isCountryLiked } = useLikes();
   const countryKey = country ? country.toLowerCase() : "austria";
-  const countryAttractions = attractions.filter((item) => item.country === countryKey);
 
-  const countryData = allCountries.find((c) => c.name.toLowerCase() === countryKey);
-  const name = countryData ? countryData.name : countryKey.charAt(0).toUpperCase() + countryKey.slice(1);
+  const [apiCountry, setApiCountry] = useState(null);
+  const [apiAttractions, setApiAttractions] = useState(null);
 
-  const heroImage = "https://via.placeholder.com/1600x800/cccccc/000000?text=Austria+Hero+Image";
-  const heroDescription = "A beautiful country in Central Europe known for its stunning landscapes, rich history, and vibrant culture.";
-  const flagImage = "https://via.placeholder.com/100x60/FF0000/FFFFFF?text=Flag";
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const all = await countriesApi.getAll();
+        if (!active || !Array.isArray(all)) return;
+        const found = all.find((c) => (c.name || "").toLowerCase() === countryKey);
+        setApiCountry(found || null);
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    (async () => {
+      try {
+        const all = await attractionsApi.getAll();
+        if (!active || !Array.isArray(all)) return;
+        setApiAttractions(all);
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [countryKey]);
+
+  const fallbackCountry = allCountries.find((c) => c.name.toLowerCase() === countryKey);
+  const name = apiCountry?.name || fallbackCountry?.name || (countryKey.charAt(0).toUpperCase() + countryKey.slice(1));
+
+  const heroImage = apiCountry?.flagUrl || fallbackCountry?.flag || "https://via.placeholder.com/1600x800/cccccc/000000?text=Country";
+  const heroDescription = apiCountry?.formalName || fallbackCountry?.description || `Explore ${name}.`;
+  const flagImage = apiCountry?.flagUrl || fallbackCountry?.flag || "";
+
+  const countryAttractions = apiAttractions
+    ? apiAttractions.filter((a) => (a.countryName || "").toLowerCase() === countryKey).map((a) => ({
+        id: a.id,
+        name: a.name,
+        image: a.imageUrl,
+        description: a.description,
+        country: (a.countryName || "").toLowerCase(),
+      }))
+    : fallbackAttractions.filter((item) => item.country === countryKey);
+
+  const fmtNumber = (n) => (typeof n === "number" ? n.toLocaleString() : n || "—");
 
   const generalInfo = [
-    {
-      icon: "fa-landmark",
-      label: "Capital",
-      value: "Vienna",
-    },
+    { icon: "fa-landmark", label: "Capital", value: apiCountry?.capital || fallbackCountry?.capital || "—" },
     {
       icon: "fa-map-marker-alt",
       label: "Region",
-      value: "Central Europe",
+      value: (apiCountry?.regions?.[0]) || fallbackCountry?.region || "—",
     },
     {
       icon: "fa-language",
       label: "Official language(s)",
-      value: "German",
+      value: (apiCountry?.languages || []).join(", ") || "—",
     },
-    {
-      icon: "fa-euro-sign",
-      label: "Currency",
-      value: "euro (€)",
-    },
+    { icon: "fa-euro-sign", label: "Currency", value: apiCountry?.currency || "—" },
     {
       icon: "fa-globe",
       label: "Geographical size",
-      value: "83 882 km²",
+      value: apiCountry ? `${fmtNumber(apiCountry.geographicalSize)} km²` : fallbackCountry?.area || "—",
     },
     {
       icon: "fa-users",
       label: "Population",
-      value: "9 197 213",
+      value: apiCountry ? fmtNumber(apiCountry.population) : fallbackCountry?.population || "—",
     },
   ];
 
@@ -58,45 +92,7 @@ const CountryPage = () => {
     "Austria has hosted the Eurovision Song Contest twice, in 1967 and 2015.",
   ];
 
-  const defaultAttractions = [
-    {
-      id: 1,
-      name: "Schönbrunn Palace",
-      image: "https://via.placeholder.com/600x400/cccccc/000000?text=Schonbrunn+Palace",
-      description: "A former imperial summer residence, now a major tourist attraction and UNESCO World Heritage Site.",
-      country: "austria",
-    },
-    {
-      id: 2,
-      name: "Hofburg Palace",
-      image: "https://via.placeholder.com/600x400/cccccc/000000?text=Hofburg+Palace",
-      description: "The residence of the President of Austria and a symbol of the country's imperial past.",
-      country: "austria",
-    },
-    {
-      id: 3,
-      name: "St. Stephen's Cathedral",
-      image: "https://via.placeholder.com/600x400/cccccc/000000?text=St.+Stephens+Cathedral",
-      description: "Vienna's most important religious building, featuring stunning Gothic architecture.",
-      country: "austria",
-    },
-    {
-      id: 4,
-      name: "Hallstatt",
-      image: "https://via.placeholder.com/600x400/cccccc/000000?text=Hallstatt",
-      description: "A picturesque village often called the 'most photographed' in Austria.",
-      country: "austria",
-    },
-    {
-      id: 5,
-      name: "Grossglockner",
-      image: "https://via.placeholder.com/600x400/cccccc/000000?text=Grossglockner",
-      description: "Austria's highest mountain, offering breathtaking views and hiking opportunities.",
-      country: "austria",
-    },
-  ];
-
-  const attractionsList = countryAttractions.length > 0 ? countryAttractions : defaultAttractions;
+  const attractionsList = countryAttractions;
 
   return (
     <div className="country-page">
@@ -106,9 +102,9 @@ const CountryPage = () => {
       >
         <div className="country-hero-overlay">
           <button
-            className={`like-btn-hero ${isCountryLiked(name) ? "liked" : ""}`}
-            onClick={() => toggleCountryLike(name)}
-            title={isCountryLiked(name) ? "Remove from favorites" : "Add to favorites"}
+            className={`like-btn-hero ${isCountryLiked(apiCountry || name) ? "liked" : ""}`}
+            onClick={() => toggleCountryLike(apiCountry || name)}
+            title={isCountryLiked(apiCountry || name) ? "Remove from favorites" : "Add to favorites"}
           >
             <i className="fas fa-heart"></i>
           </button>

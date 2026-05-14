@@ -1,15 +1,54 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { attractions } from "../data/attractions";
+import { attractions as fallbackAttractions } from "../data/attractions";
+import { attractionsApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
 import "../styles/Attractions.css";
 
-const uniqueCountries = ["All", ...new Set(attractions.map((a) => a.country))];
+const normalizeAttraction = (a) => ({
+  id: a.id,
+  name: a.name,
+  description: a.description,
+  fullDescription: a.fullDescription || a.description,
+  image: a.imageUrl || a.image,
+  heroImage: a.bGUrl || a.heroImage || a.imageUrl || a.image,
+  country: (a.countryName || a.country || "").toString().toLowerCase(),
+  countryName: a.countryName || a.country,
+  city: a.city,
+  price: typeof a.price === "number" ? `$${a.price}` : a.price,
+  duration: a.duration,
+  bestTime: a.bestTimeToVisit || a.bestTime,
+  hours: a.openingHours || a.hours,
+  rating: a.rating,
+  reviews: a.numberOfReviews ?? a.reviews,
+});
 
 const Attractions = () => {
   const [query, setQuery] = useState("");
   const [country, setCountry] = useState("All");
+  const [attractions, setAttractions] = useState(() => fallbackAttractions.map(normalizeAttraction));
   const { isLiked, toggleLike } = useLikes();
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await attractionsApi.getAll();
+        if (!active || !Array.isArray(data)) return;
+        setAttractions(data.map(normalizeAttraction));
+      } catch {
+        /* keep fallback */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const uniqueCountries = useMemo(
+    () => ["All", ...new Set(attractions.map((a) => a.country))],
+    [attractions]
+  );
 
   const filtered = useMemo(() => {
     return attractions.filter((item) => {
@@ -19,7 +58,7 @@ const Attractions = () => {
       const matchesCountry = country === "All" || item.country === country;
       return matchesSearch && matchesCountry;
     });
-  }, [query, country]);
+  }, [query, country, attractions]);
 
   const formatCountryName = (country) => {
     if (country === "All") return "All countries";

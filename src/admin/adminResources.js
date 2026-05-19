@@ -17,6 +17,7 @@ const countryToReadForm = (c) => ({
   currency: c.currency,
   languages: c.languages || [],
   flagUrl: c.flagUrl,
+  backgroundUrl: c.backgroundUrl,
   summary: c.summary || "",
 });
 
@@ -31,6 +32,7 @@ const countryToCreateDto = (form) => ({
   currency: form.currency || null,
   languages: Array.isArray(form.languages) ? form.languages : [],
   flagUrl: form.flagUrl || null,
+  backgroundUrl: form.backgroundUrl || null,
   summary: form.summary || null,
 });
 

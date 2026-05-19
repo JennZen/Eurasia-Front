@@ -33,6 +33,7 @@ export const SCHEMAS = {
       { key: "currency", label: "Currency", type: "text", group: "Economy", hint: "Currency name or ISO code (e.g. \"Euro\" or \"EUR\")." },
       { key: "languages", label: "Languages", type: "tags-input", group: "Culture", hint: "Press Enter or comma to add a language. Official + widely-spoken languages." },
       { key: "flagUrl", label: "Flag URL", type: "url", group: "Media", hint: "Direct link to the flag image. Wikipedia commons URLs work." },
+      { key: "backgroundUrl", label: "Background URL", type: "url", group: "Media", aliases: ["background", "bgUrl"], hint: "Large hero/background image for the country page." },
       { key: "summary", label: "Summary", type: "textarea", group: "Content", hint: "Short overview of the country." },
     ],
   },

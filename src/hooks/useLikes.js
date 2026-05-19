@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { usersApi, countriesApi, attractionsApi, tokenStore } from "../services/api";
+import { usersApi, countriesApi, attractionsApi } from "../services/api";
+import { useAuth } from "../admin/AdminAuthContext";
 
 export const useLikes = () => {
   const [likes, setLikes] = useState([]); // attraction ids
@@ -11,8 +12,10 @@ export const useLikes = () => {
   const nameToIdRef = useRef(new Map());
   const idToNameRef = useRef(new Map());
 
-  const authUser = tokenStore.getUser();
-  const userId = authUser?.id || null;
+  // Subscribe to auth context so userId updates when the user logs in/out
+  // within the same session (previously read once from tokenStore — stale).
+  const { user: authUser } = useAuth();
+  const userId = authUser?.id ?? null;
 
   // Build name<->id map from /api/countries/list (UI toggles by name).
   useEffect(() => {
@@ -62,7 +65,17 @@ export const useLikes = () => {
     }
 
     if (Array.isArray(favAttrIds)) {
-      const ids = favAttrIds.map(Number);
+      // The backend may return a list of ints OR a list of objects {id, ...}.
+      // Normalize both shapes so `likes` is always a clean number[].
+      const ids = favAttrIds
+        .map((x) => {
+          if (x == null) return null;
+          if (typeof x === "number") return x;
+          if (typeof x === "object" && x.id != null) return Number(x.id);
+          const n = Number(x);
+          return Number.isFinite(n) ? n : null;
+        })
+        .filter((x) => x != null);
       setLikes(ids);
       if (ids.length === 0) {
         setLikedAttractionsData([]);
@@ -96,12 +109,39 @@ export const useLikes = () => {
         console.warn("toggleLike: invalid attraction id", attractionId);
         return;
       }
-      const has = likes.includes(id);
+      // Re-sync from the server before deciding add vs remove — the local `likes`
+      // array can lag behind (other tab, slow initial load) and lead to a 409.
+      // Accept either a list of ints OR a list of objects with an `id` field so
+      // the toggle stays correct regardless of the backend's response shape.
+      let serverLikes = likes;
+      try {
+        const fresh = await usersApi.getFavoriteAttractions(userId);
+        if (Array.isArray(fresh)) {
+          serverLikes = fresh
+            .map((x) => {
+              if (x == null) return null;
+              if (typeof x === "number") return x;
+              if (typeof x === "object" && x.id != null) return Number(x.id);
+              const n = Number(x);
+              return Number.isFinite(n) ? n : null;
+            })
+            .filter((x) => x != null);
+        }
+      } catch {
+        /* fall back to local state */
+      }
+      const has = serverLikes.includes(id);
       try {
         if (has) await usersApi.removeFavoriteAttraction(userId, id);
         else await usersApi.addFavoriteAttraction(userId, id);
         await refresh();
       } catch (err) {
+        // 409 (already exists) / 404 (not found) just means our local view was stale —
+        // pull the truth from the server instead of alerting the user.
+        if (err && (err.status === 409 || err.status === 404)) {
+          await refresh();
+          return;
+        }
         console.error("Favorite attraction sync failed:", err);
         alert(`Failed to ${has ? "remove" : "add"} favorite: ${err.message}`);
       }
@@ -160,12 +200,28 @@ export const useLikes = () => {
       }
       if (!name) name = idToNameRef.current.get(id) || `Country #${id}`;
 
-      const has = countryIds.includes(id);
+      // Re-sync country favorites before deciding — same staleness concern as attractions.
+      let serverIds = countryIds;
+      try {
+        const fresh = await usersApi.getFavoriteCountries(userId);
+        if (Array.isArray(fresh)) {
+          serverIds = fresh
+            .map((c) => (c && c.id != null ? Number(c.id) : null))
+            .filter((x) => x != null);
+        }
+      } catch {
+        /* fall back to local state */
+      }
+      const has = serverIds.includes(id);
       try {
         if (has) await usersApi.removeFavoriteCountry(userId, id);
         else await usersApi.addFavoriteCountry(userId, id);
         await refresh();
       } catch (err) {
+        if (err && (err.status === 409 || err.status === 404)) {
+          await refresh();
+          return;
+        }
         console.error("Favorite country sync failed:", err);
         alert(`Failed to ${has ? "remove" : "add"} favorite: ${err.message}`);
       }

@@ -50,21 +50,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        <div className="footer-links">
-          <h4>Services</h4>
-          <ul>
-            <li>
-              <Link to="/deals">Deals</Link>
-            </li>
-            <li>
-              <Link to="/reservation">Reservation</Link>
-            </li>
-            <li>
-              <Link to="/book">Book a Trip</Link>
-            </li>
-          </ul>
-        </div>
-
         <div className="footer-contact">
           <h4>Contact</h4>
           <ul>

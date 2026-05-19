@@ -43,16 +43,41 @@ export default function ProfilePage() {
     return <Navigate to="/login" replace state={{ from: "/profile" }} />;
   }
 
+  const [saving, setSaving] = useState(false);
+  const [avatarError, setAvatarError] = useState("");
+
   const handleEditOpen = () => {
     setFormData({ name: user.name, phone: user.phone || "", avatarUrl: user.avatarUrl || "" });
+    setAvatarError("");
     setIsEditing(true);
   };
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setFormData((prev) => ({ ...prev, avatarUrl: url }));
+  const handleAvatarChange = async (e) => {
+    setAvatarError("");
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setAvatarError("Please select an image file.");
+      return;
+    }
+    // Cap at ~2MB raw to keep the base64 payload (~2.7MB) reasonable for a JSON PUT.
+    const MAX_BYTES = 2 * 1024 * 1024;
+    if (file.size > MAX_BYTES) {
+      setAvatarError("Image too large — please pick one under 2MB.");
+      return;
+    }
+    // Persist the picture as a data URL so the backend can store the bytes inline
+    // and other devices/sessions can render it without access to the local blob.
+    try {
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(reader.error || new Error("Failed to read image"));
+        reader.readAsDataURL(file);
+      });
+      setFormData((prev) => ({ ...prev, avatarUrl: dataUrl }));
+    } catch (err) {
+      setAvatarError(err.message || "Failed to read image.");
     }
   };
 
@@ -61,22 +86,38 @@ export default function ProfilePage() {
       alert("Cannot save: missing user id. Please sign in again.");
       return;
     }
+    const name = (formData.name || "").trim();
+    if (!name) {
+      alert("Name cannot be empty.");
+      return;
+    }
+    setSaving(true);
     try {
       const updated = await usersApi.update(authUser.id, {
-        name: formData.name,
-        phone: formData.phone,
-        avatarUrl: formData.avatarUrl,
+        name,
+        phone: formData.phone || "",
+        avatarUrl: formData.avatarUrl || "",
       });
+      // Mirror the canonical server response into auth context so header avatar / name
+      // refresh everywhere (Header, ProfilePage, useLikes consumers).
       updateAuthUser && updateAuthUser({
         displayName: updated.name,
+        name: updated.name,
         avatarUrl: updated.avatarUrl,
         phone: updated.phone,
       });
-      setUser((prev) => ({ ...prev, ...updated }));
+      setUser((prev) => ({
+        ...prev,
+        name: updated.name,
+        phone: updated.phone || "",
+        avatarUrl: updated.avatarUrl || "",
+      }));
       setIsEditing(false);
     } catch (e) {
       console.error(e);
       alert(e.message || "Failed to update profile");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -159,7 +200,7 @@ export default function ProfilePage() {
               <div className="stat-label">Attractions</div>
             </div>
             <div className="stat">
-              <div className="stat-number">2025</div>
+              <div className="stat-number">2026</div>
               <div className="stat-label">Member Since</div>
             </div>
           </div>
@@ -209,7 +250,7 @@ export default function ProfilePage() {
                     <span className="country-card-region">{c.region || "—"}</span>
                     <button
                       className="country-card-remove"
-                      onClick={() => toggleCountryLike(c.name)}
+                      onClick={() => toggleCountryLike(c)}
                       title="Remove"
                     >
                       &times;
@@ -386,6 +427,11 @@ export default function ProfilePage() {
                   )}
                 </div>
               </div>
+              {avatarError && (
+                <p style={{ color: "#c0392b", fontSize: 13, marginTop: 4 }}>
+                  {avatarError}
+                </p>
+              )}
 
               <label className="modal-label">
                 Full Name
@@ -412,11 +458,19 @@ export default function ProfilePage() {
               </label>
 
               <div className="modal-actions">
-                <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setIsEditing(false)}
+                  disabled={saving}
+                >
                   Cancel
                 </button>
-                <button className="btn btn-primary" onClick={handleSave}>
-                  Save Changes
+                <button
+                  className="btn btn-primary"
+                  onClick={handleSave}
+                  disabled={saving}
+                >
+                  {saving ? "Saving…" : "Save Changes"}
                 </button>
               </div>
             </div>

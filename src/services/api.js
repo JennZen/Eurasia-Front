@@ -69,8 +69,49 @@ export function handleInvalidToken(reason = "Session expired. Please sign in aga
   } catch {}
 }
 
+// Decode JWT payload without verification (front-end only — server still validates).
+export function decodeJwt(token) {
+  if (!token || typeof token !== "string") return null;
+  const parts = token.split(".");
+  if (parts.length < 2) return null;
+  try {
+    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64 + "===".slice((base64.length + 3) % 4);
+    const json = decodeURIComponent(
+      atob(padded)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+
+// Returns expiry timestamp in ms, or null if not encoded.
+export function getTokenExpiry(token = tokenStore.get()) {
+  const payload = decodeJwt(token);
+  if (!payload || typeof payload.exp !== "number") return null;
+  return payload.exp * 1000;
+}
+
+export function isTokenExpired(token = tokenStore.get()) {
+  const exp = getTokenExpiry(token);
+  if (exp == null) return false; // unknown → don't force logout
+  return Date.now() >= exp;
+}
+
 async function request(path, init = {}) {
   const token = tokenStore.get();
+  const isAuthEndpoint = path.startsWith("/api/auth/");
+
+  // Proactive expiry check — avoids a wasted round-trip when we already know the token is dead.
+  if (token && !isAuthEndpoint && isTokenExpired(token)) {
+    handleInvalidToken();
+    throw new ApiError("Your session has expired. Please sign in again.", 401, null);
+  }
+
   const headers = { ...(init.headers || {}) };
   if (init.body !== undefined && !headers["Content-Type"]) {
     headers["Content-Type"] = "application/json";
@@ -86,7 +127,6 @@ async function request(path, init = {}) {
 
   // 401 = bearer token missing/invalid/expired. Treat as forced logout for any
   // request EXCEPT the login/register endpoints (where 401 just means bad creds).
-  const isAuthEndpoint = path.startsWith("/api/auth/");
   if (res.status === 401 && !isAuthEndpoint) {
     handleInvalidToken();
     throw new ApiError("Your session has expired. Please sign in again.", 401, null);

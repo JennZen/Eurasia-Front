@@ -12,6 +12,8 @@ export default function AdminLogin() {
   const [busy, setBusy] = useState(false);
 
   if (user && user.role === "Admin") return <Navigate to="/admin" replace />;
+  // A signed-in non-admin has no business on the admin login screen — send them home.
+  if (user && user.role !== "Admin") return <Navigate to="/" replace />;
 
   const onSubmit = async (e) => {
     e.preventDefault();

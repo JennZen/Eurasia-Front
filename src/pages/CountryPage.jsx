@@ -1,10 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { attractions as fallbackAttractions } from "../data/attractions";
 import { allCountries } from "../data/allCountries";
-import { attractionsApi, countriesApi } from "../services/api";
+import { attractionsApi, countriesApi, newsApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
 import "../styles/CountryPage.css";
+
+const formatNewsDate = (iso) => {
+  if (!iso) return "";
+  try {
+    return new Date(iso).toLocaleDateString(undefined, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return "";
+  }
+};
 
 const CountryPage = () => {
   const { country } = useParams();
@@ -13,6 +26,8 @@ const CountryPage = () => {
 
   const [apiCountry, setApiCountry] = useState(null);
   const [apiAttractions, setApiAttractions] = useState(null);
+  const [apiNews, setApiNews] = useState(null);
+  const [newsLoading, setNewsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -35,6 +50,17 @@ const CountryPage = () => {
         /* keep fallback */
       }
     })();
+    (async () => {
+      try {
+        const all = await newsApi.getAll();
+        if (!active || !Array.isArray(all)) return;
+        setApiNews(all);
+      } catch {
+        if (active) setApiNews([]);
+      } finally {
+        if (active) setNewsLoading(false);
+      }
+    })();
     return () => {
       active = false;
     };
@@ -43,7 +69,7 @@ const CountryPage = () => {
   const fallbackCountry = allCountries.find((c) => c.name.toLowerCase() === countryKey);
   const name = apiCountry?.name || fallbackCountry?.name || (countryKey.charAt(0).toUpperCase() + countryKey.slice(1));
 
-  const heroImage = apiCountry?.flagUrl || fallbackCountry?.flag || "https://via.placeholder.com/1600x800/cccccc/000000?text=Country";
+  const heroImage = apiCountry?.backgroundUrl || fallbackCountry?.background || apiCountry?.flagUrl || fallbackCountry?.flag || "https://via.placeholder.com/1600x800/cccccc/000000?text=Country";
   const heroDescription = apiCountry?.formalName || fallbackCountry?.description || `Explore ${name}.`;
   const flagImage = apiCountry?.flagUrl || fallbackCountry?.flag || "";
 
@@ -93,6 +119,16 @@ const CountryPage = () => {
   ];
 
   const attractionsList = countryAttractions;
+
+  const countryNews = useMemo(() => {
+    if (!Array.isArray(apiNews) || apiNews.length === 0) return [];
+    const needles = [name, countryKey].filter(Boolean).map((s) => s.toLowerCase());
+    const matches = apiNews.filter((n) => {
+      const haystack = `${n.title || ""} ${n.description || ""}`.toLowerCase();
+      return needles.some((needle) => haystack.includes(needle));
+    });
+    return matches.slice(0, 3);
+  }, [apiNews, name, countryKey]);
 
   return (
     <div className="country-page">
@@ -166,45 +202,46 @@ const CountryPage = () => {
 
       <section className="country-news">
         <h2 className="section-title">Latest News</h2>
-        <div className="news-grid">
-          {[
-            {
-              id: 1,
-              title: "Vienna Concert Season Opens",
-              excerpt: "Rediscover classical music with this year’s opening gala at the Vienna State Opera.",
-              image: "https://via.placeholder.com/600x400/cccccc/000000?text=Vienna+Concert"
-            },
-            {
-              id: 2,
-              title: "New Alpine Hiking Routes",
-              excerpt: "A new set of trail renovations across the Tyrol Alps makes summer trekking even more scenic.",
-              image: "https://via.placeholder.com/600x400/cccccc/000000?text=Alpine+Trails"
-            },
-            {
-              id: 3,
-              title: "Gastronomy Week in Salzburg",
-              excerpt: "Experience traditional Austrian cuisine and contemporary chefs at the annual festival.",
-              image: "https://via.placeholder.com/600x400/cccccc/000000?text=Salzburg+Food+Week"
-            }
-          ].map((newsItem) => (
-            <div className="news-card" key={newsItem.id}>
-              <div className="news-img-wrapper">
-                <img src={newsItem.image} alt={newsItem.title} />
+        {newsLoading ? (
+          <p style={{ textAlign: "center", opacity: 0.6 }}>Loading news…</p>
+        ) : countryNews.length === 0 ? (
+          <p style={{ textAlign: "center", opacity: 0.6 }}>
+            No news about {name} yet.
+          </p>
+        ) : (
+          <div className="news-grid">
+            {countryNews.map((newsItem) => (
+              <div className="news-card" key={newsItem.id}>
+                <div className="news-img-wrapper">
+                  <img src={newsItem.imageUrl} alt={newsItem.title} />
+                </div>
+                <div className="news-content">
+                  <h3>{newsItem.title}</h3>
+                  <p>{newsItem.description}</p>
+                  {newsItem.publishedAt && (
+                    <span
+                      style={{
+                        display: "block",
+                        marginBottom: 8,
+                        fontSize: 12,
+                        opacity: 0.6,
+                      }}
+                    >
+                      {formatNewsDate(newsItem.publishedAt)}
+                    </span>
+                  )}
+                  <Link
+                    to="/latest-news"
+                    state={{ source: "country", selectedNewsId: newsItem.id }}
+                    className="attraction-btn"
+                  >
+                    Learn More
+                  </Link>
+                </div>
               </div>
-              <div className="news-content">
-                <h3>{newsItem.title}</h3>
-                <p>{newsItem.excerpt}</p>
-                <Link
-                  to="/latest-news"
-                  state={{ source: "country", selectedNewsId: newsItem.id }}
-                  className="attraction-btn"
-                >
-                  Learn More
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

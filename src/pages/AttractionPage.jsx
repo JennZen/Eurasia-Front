@@ -11,6 +11,8 @@ const normalizeAttraction = (a) => ({
   description: a.description,
   fullDescription: a.fullDescription || a.description,
   image: a.imageUrl || a.image,
+  imageUrl: a.imageUrl || a.image,
+  bgUrl: a.bGUrl || a.bgUrl || a.heroImage || a.image,
   heroImage: a.bGUrl || a.heroImage || a.imageUrl || a.image,
   country: (a.countryName || a.country || "").toString().toLowerCase(),
   countryName: a.countryName || a.country,
@@ -115,9 +117,6 @@ const AttractionPage = () => {
             </span>
             <span className="reviews">({attraction.reviews} reviews)</span>
           </div>
-          <p className="hero-subtext" style={{ fontSize: "1.4rem" }}>
-            {attraction.fullDescription}
-          </p>
         </div>
       </section>
 
@@ -135,8 +134,8 @@ const AttractionPage = () => {
               <p style={{ fontSize: "1.1rem" }}>Best time to visit: {attraction.bestTime}</p>
             </div>
             <div className="gallery">
-              <img src={attraction.heroImage} alt={`${attraction.name} 1`} />
-              <img src={attraction.image} alt={`${attraction.name} 2`} />
+              <img src={attraction.bgUrl} alt={`${attraction.name} 1`} />
+              <img src={attraction.imageUrl} alt={`${attraction.name} 2`} />
             </div>
           </div>
 

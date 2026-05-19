@@ -215,9 +215,9 @@ const Countries = () => {
                   </Link>
                 </h3>
                 <button
-                  className={`country-like-btn ${isCountryLiked(country.name) ? "liked" : ""}`}
-                  onClick={() => toggleCountryLike(country.name)}
-                  title={isCountryLiked(country.name) ? "Remove from favorites" : "Add to favorites"}
+                  className={`country-like-btn ${isCountryLiked(country) ? "liked" : ""}`}
+                  onClick={() => toggleCountryLike(country)}
+                  title={isCountryLiked(country) ? "Remove from favorites" : "Add to favorites"}
                 >
                   <i className="fas fa-heart"></i>
                 </button>

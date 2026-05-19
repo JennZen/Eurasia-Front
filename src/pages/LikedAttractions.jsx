@@ -109,7 +109,7 @@ const LikedAttractions = () => {
                     />
                     <button
                       className="unlike-btn"
-                      onClick={() => toggleCountryLike(country.name)}
+                      onClick={() => toggleCountryLike(country)}
                       title="Remove from likes"
                     >
                       <i className="fas fa-heart"></i>

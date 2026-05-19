@@ -39,6 +39,8 @@ export default function AdminLayout() {
   const { user, logout } = useAdminAuth();
 
   if (!user) return <Navigate to="/admin/login" replace />;
+  // Block non-admin users from the admin shell — bounce them to the public home.
+  if (user.role !== "Admin") return <Navigate to="/" replace />;
 
   return (
     <div className="admin-root">

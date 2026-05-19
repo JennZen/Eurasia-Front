@@ -3,17 +3,6 @@ import { useEffect, useState } from "react";
 import { APPS, SCHEMAS } from "../schemas";
 import { adminApi } from "../../services/api";
 
-function timeAgo(iso) {
-  const ms = Date.now() - new Date(iso).getTime();
-  const s = Math.floor(ms / 1000);
-  if (s < 60) return `${s}s ago`;
-  const m = Math.floor(s / 60);
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
-}
-
 const EMPTY_STATS = { countries: 0, attractions: 0, news: 0, users: 0 };
 
 export default function AdminDashboard() {
@@ -192,7 +181,6 @@ export default function AdminDashboard() {
                         </>
                       ) : null}
                     </span>
-                    <span className="admin-recent__time">{timeAgo(entry.at)}</span>
                   </li>
                 ))}
               </ul>

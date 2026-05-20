@@ -21,7 +21,7 @@ const formatNewsDate = (iso) => {
 
 const CountryPage = () => {
   const { country } = useParams();
-  const { toggleCountryLike, isCountryLiked } = useLikes();
+  const { toggleCountryLike, isCountryLiked } = useLikes({ attractions: false });
   const countryKey = country ? country.toLowerCase() : "austria";
 
   const [apiCountry, setApiCountry] = useState(null);
@@ -33,10 +33,24 @@ const CountryPage = () => {
     let active = true;
     (async () => {
       try {
+        // Two-step lookup: route param is country slug (name), but the detail endpoint
+        // wants an ID. The list endpoint omits `Summary` in CountryFlow.GetAllCountriesMainInfoDtos,
+        // while GetById returns the full DTO — so we resolve id from list, then refetch detail.
         const all = await countriesApi.getAll();
         if (!active || !Array.isArray(all)) return;
         const found = all.find((c) => (c.name || "").toLowerCase() === countryKey);
-        setApiCountry(found || null);
+        if (!found) {
+          setApiCountry(null);
+          return;
+        }
+        // Render list-DTO immediately so non-summary fields don't flash.
+        setApiCountry(found);
+        try {
+          const detail = await countriesApi.getById(found.id);
+          if (active && detail) setApiCountry(detail);
+        } catch {
+          /* keep list-DTO; summary will fall back to hardcoded facts */
+        }
       } catch {
         /* keep fallback */
       }
@@ -168,11 +182,20 @@ const CountryPage = () => {
         </div>
         <div className="interesting-facts">
           <h3>Interesting Facts</h3>
-          <ul>
-            {interestingFacts.map((fact, index) => (
-              <li key={index}>{fact}</li>
-            ))}
-          </ul>
+          {apiCountry?.summary ? (
+            // Backend stores Summary as HTML (rich-text editor in admin panel),
+            // so we render it as-is. Trusted source: only Admin role can write this field.
+            <div
+              className="interesting-facts-content"
+              dangerouslySetInnerHTML={{ __html: apiCountry.summary }}
+            />
+          ) : (
+            <ul>
+              {interestingFacts.map((fact, index) => (
+                <li key={index}>{fact}</li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
 

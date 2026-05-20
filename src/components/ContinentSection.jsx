@@ -23,7 +23,7 @@ const ContinentSection = () => {
                 <i className="fa fa-globe"></i> {continent.territory}
               </li>
               <li>
-                <i className="fa fa-home"></i> {continent.avgPrice}
+                <i className="fa fa-flag"></i> {continent.countries}
               </li>
             </ul>
           </div>

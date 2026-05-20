@@ -13,9 +13,8 @@ const buildAsiaRegionsFromApi = (apiCountries) => {
   );
 
   const grouped = {};
-  apiCountries
-    .filter((c) => Array.isArray(c.continents) && c.continents.includes("Asia"))
-    .forEach((c) => {
+  // Server already filtered by continentIds=Asia — no need to re-check c.continents.
+  apiCountries.forEach((c) => {
       const region = Array.isArray(c.regions) && c.regions.length
         ? String(c.regions[0]).toLowerCase()
         : null;
@@ -31,6 +30,15 @@ const buildAsiaRegionsFromApi = (apiCountries) => {
     });
   return grouped;
 };
+
+// Forgiving "title case" — capitalises each word; used when the DB returns a
+// region key we don't have a friendly label for (e.g. "south-eastern").
+const prettifyRegionKey = (key) =>
+  String(key)
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
 
 const AsiaMap = () => {
   const mapRef = useRef(null);
@@ -54,7 +62,7 @@ const AsiaMap = () => {
     let active = true;
     (async () => {
       try {
-        const data = await countriesApi.getAll();
+        const data = await countriesApi.getByContinent("Asia");
         if (!active || !Array.isArray(data)) return;
         const built = buildAsiaRegionsFromApi(data);
         if (Object.keys(built).length) setApiRegions(built);
@@ -305,7 +313,7 @@ const AsiaMap = () => {
                 className="region-btn region-btn-active"
               >
                 <span className="btn-text">
-                  {regionLabels[activeRegionButton]} Asia
+                  {prettifyRegionKey(activeRegionButton)}
                 </span>
                 <i
                   className="fas fa-arrow-up arrow-icon rotated"
@@ -335,7 +343,7 @@ const AsiaMap = () => {
                 className="region-btn"
               >
                 <span className="btn-text">
-                  {regionLabels[regionKey]} Asia
+                  {prettifyRegionKey(regionKey)}
                 </span>
                 <i
                   className="fas fa-arrow-up arrow-icon"

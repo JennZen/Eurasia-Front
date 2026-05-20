@@ -29,7 +29,7 @@ const AttractionPage = () => {
   const location = useLocation();
   const { country, id } = useParams();
   const attractionId = Number(id);
-  const { isLiked, toggleLike } = useLikes();
+  const { isLiked, toggleLike } = useLikes({ countries: false });
   const [allAttractions, setAllAttractions] = useState(() => fallbackAttractions.map(normalizeAttraction));
   const [loading, setLoading] = useState(true);
 

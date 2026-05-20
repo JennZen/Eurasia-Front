@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { allCountries as fallbackCountries } from "../data/allCountries";
-import { countriesApi } from "../services/api";
+import { countriesApi, CONTINENT_IDS } from "../services/api";
 import { Link } from "react-router-dom";
 import "../styles/country-list.css";
 
@@ -36,7 +36,11 @@ const normalize = (c) => {
 };
 
 const CountryList = ({ continent }) => {
-  const [allItems, setAllItems] = useState(() => fallbackCountries.map(normalize));
+  // Fallback dataset is filtered by continent name; once the API responds we replace it
+  // with the server-filtered list (already restricted to this continent via continentIds).
+  const [allItems, setAllItems] = useState(() =>
+    fallbackCountries.map(normalize).filter((c) => c.continent === continent)
+  );
   const [search, setSearch] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("All");
   const [page, setPage] = useState(1);
@@ -46,7 +50,10 @@ const CountryList = ({ continent }) => {
     let active = true;
     (async () => {
       try {
-        const data = await countriesApi.getAll();
+        // Request only the rows for this continent — server-side filter via continentIds.
+        const data = CONTINENT_IDS[continent]
+          ? await countriesApi.getByContinent(continent)
+          : await countriesApi.getAll();
         if (!active || !Array.isArray(data)) return;
         setAllItems(data.map(normalize));
       } catch {
@@ -56,12 +63,10 @@ const CountryList = ({ continent }) => {
     return () => {
       active = false;
     };
-  }, []);
+  }, [continent]);
 
-  const countries = useMemo(
-    () => allItems.filter((c) => c.continent === continent),
-    [allItems, continent]
-  );
+  // Server already restricted by continentIds; no client-side continent filter needed.
+  const countries = allItems;
 
   const regions = useMemo(() => {
     const set = new Set(countries.map((c) => c.region).filter(Boolean));

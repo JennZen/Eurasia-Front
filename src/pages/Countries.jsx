@@ -44,7 +44,7 @@ const normalizeCountry = (c) => {
 };
 
 const Countries = () => {
-  const { toggleCountryLike, isCountryLiked } = useLikes();
+  const { toggleCountryLike, isCountryLiked } = useLikes({ attractions: false });
   const [allCountries, setAllCountries] = useState(() => fallbackCountries.map(normalizeCountry));
   const [search, setSearch] = useState("");
   const [selectedContinent, setSelectedContinent] = useState("All");

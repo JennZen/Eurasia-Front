@@ -3,13 +3,27 @@ import { Link } from "react-router-dom";
 import { banners as fallbackBanners } from "../data/banners";
 import { bannersApi } from "../services/api";
 
+// Backend returns Population/Territory as raw numeric strings (e.g. "1430000000", "9596961").
+// Convert to a "X.XX Mil" / "X.XX Bil" representation, leaving non-numeric strings untouched
+// (the seed banners.js already uses display-formatted strings).
+const formatMillions = (value, { unit = "" } = {}) => {
+  if (value === null || value === undefined || value === "") return "";
+  const num = typeof value === "number" ? value : Number(String(value).replace(/[^\d.-]/g, ""));
+  if (!Number.isFinite(num)) return String(value);
+  const suffix = unit ? ` ${unit}` : "";
+  if (Math.abs(num) >= 1_000_000_000) return `${(num / 1_000_000_000).toFixed(2)} Bil${suffix}`;
+  if (Math.abs(num) >= 1_000_000) return `${(num / 1_000_000).toFixed(2)} Mil${suffix}`;
+  if (Math.abs(num) >= 1_000) return `${(num / 1_000).toFixed(0)} K${suffix}`;
+  return `${num}${suffix}`;
+};
+
 const normalize = (b) => ({
   id: b.id,
   title: b.title,
   subtitle: b.subtitle || "Take a Glimpse Into The Beautiful Country Of:",
   image: b.imageUrl || b.image,
-  population: b.population || "",
-  territory: b.territory || "",
+  population: formatMillions(b.population, { unit: "People" }),
+  territory: formatMillions(b.territory, { unit: "km²" }),
   capital: b.capital || "",
   link: b.link || `/country/${String(b.title || "").toLowerCase()}`,
 });

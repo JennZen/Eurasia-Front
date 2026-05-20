@@ -2,7 +2,14 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { usersApi, countriesApi, attractionsApi } from "../services/api";
 import { useAuth } from "../admin/AdminAuthContext";
 
-export const useLikes = () => {
+// `options.countries` / `options.attractions` let the caller opt out of loading
+// the other side. Default = both (back-compat). A page that only renders a
+// country heart-button (e.g. /countries, /asia, /europe) should pass
+// `{ countries: true, attractions: false }` to avoid two pointless requests:
+// GET /api/users/{id}/favorites/attractions  and  GET /api/attractions.
+export const useLikes = (options = {}) => {
+  const loadCountries = options.countries !== false;
+  const loadAttractions = options.attractions !== false;
   const [likes, setLikes] = useState([]); // attraction ids
   const [likedAttractionsData, setLikedAttractionsData] = useState([]); // full DTOs
   const [countryLikes, setCountryLikes] = useState([]); // country names (UI keys)
@@ -18,7 +25,9 @@ export const useLikes = () => {
   const userId = authUser?.id ?? null;
 
   // Build name<->id map from /api/countries/list (UI toggles by name).
+  // Skip entirely when the caller doesn't need country likes.
   useEffect(() => {
+    if (!loadCountries) return;
     let active = true;
     countriesApi
       .getList()
@@ -35,7 +44,7 @@ export const useLikes = () => {
     return () => {
       active = false;
     };
-  }, []);
+  }, [loadCountries]);
 
   const refresh = useCallback(async () => {
     if (!userId) {
@@ -47,12 +56,15 @@ export const useLikes = () => {
       setLoaded(true);
       return;
     }
+    // Only fetch the favorites endpoints the caller actually uses — saves
+    // /api/users/{id}/favorites/attractions (and /api/attractions below) on
+    // pages that don't render attraction hearts.
     const [favCountries, favAttrIds] = await Promise.all([
-      usersApi.getFavoriteCountries(userId).catch(() => null),
-      usersApi.getFavoriteAttractions(userId).catch(() => null),
+      loadCountries ? usersApi.getFavoriteCountries(userId).catch(() => null) : Promise.resolve(null),
+      loadAttractions ? usersApi.getFavoriteAttractions(userId).catch(() => null) : Promise.resolve(null),
     ]);
 
-    if (Array.isArray(favCountries)) {
+    if (loadCountries && Array.isArray(favCountries)) {
       favCountries.forEach((c) => {
         if (c && c.name && c.id != null) {
           nameToIdRef.current.set(c.name.toLowerCase(), c.id);
@@ -64,7 +76,7 @@ export const useLikes = () => {
       setCountryIds(favCountries.map((c) => c.id).filter((x) => x != null));
     }
 
-    if (Array.isArray(favAttrIds)) {
+    if (loadAttractions && Array.isArray(favAttrIds)) {
       // The backend may return a list of ints OR a list of objects {id, ...}.
       // Normalize both shapes so `likes` is always a clean number[].
       const ids = favAttrIds
@@ -92,7 +104,7 @@ export const useLikes = () => {
       }
     }
     setLoaded(true);
-  }, [userId]);
+  }, [userId, loadCountries, loadAttractions]);
 
   useEffect(() => {
     refresh();

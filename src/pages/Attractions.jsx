@@ -27,7 +27,7 @@ const Attractions = () => {
   const [query, setQuery] = useState("");
   const [country, setCountry] = useState("All");
   const [attractions, setAttractions] = useState(() => fallbackAttractions.map(normalizeAttraction));
-  const { isLiked, toggleLike } = useLikes();
+  const { isLiked, toggleLike } = useLikes({ countries: false });
 
   useEffect(() => {
     let active = true;

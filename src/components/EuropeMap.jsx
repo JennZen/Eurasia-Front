@@ -14,9 +14,8 @@ const buildRegionsFromApi = (apiCountries) => {
   );
 
   const grouped = {};
-  apiCountries
-    .filter((c) => Array.isArray(c.continents) && c.continents.includes("Europe"))
-    .forEach((c) => {
+  // Server already filtered by continentIds=Europe — no need to re-check c.continents.
+  apiCountries.forEach((c) => {
       const region = Array.isArray(c.regions) && c.regions.length
         ? String(c.regions[0]).toLowerCase()
         : null;
@@ -32,6 +31,15 @@ const buildRegionsFromApi = (apiCountries) => {
     });
   return grouped;
 };
+
+// Forgiving "title case" — used for region button labels when the DB returns
+// a multi-word key (e.g. "south-eastern" -> "South Eastern").
+const prettifyRegionKey = (key) =>
+  String(key)
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
 
 const EuropeMap = () => {
   const mapRef = useRef(null);
@@ -55,7 +63,7 @@ const EuropeMap = () => {
     let active = true;
     (async () => {
       try {
-        const data = await countriesApi.getAll();
+        const data = await countriesApi.getByContinent("Europe");
         if (!active || !Array.isArray(data)) return;
         const built = buildRegionsFromApi(data);
         if (Object.keys(built).length) setApiRegions(built);
@@ -305,9 +313,7 @@ const EuropeMap = () => {
                 className="region-btn region-btn-active"
               >
                 <span className="btn-text">
-                  {activeRegionButton.charAt(0).toUpperCase() +
-                    activeRegionButton.slice(1)}{" "}
-                  Europe
+                  {prettifyRegionKey(activeRegionButton)}
                 </span>
                 <i
                   className="fas fa-arrow-up arrow-icon rotated"
@@ -337,8 +343,7 @@ const EuropeMap = () => {
                 className="region-btn"
               >
                 <span className="btn-text">
-                  {regionKey.charAt(0).toUpperCase() + regionKey.slice(1)}{" "}
-                  Europe
+                  {prettifyRegionKey(regionKey)}
                 </span>
                 <i
                   className="fas fa-arrow-up arrow-icon"

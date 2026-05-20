@@ -183,8 +183,20 @@ export const authApi = {
     }),
 };
 
+// Continent IDs as seeded in the backend DB (Continents table).
+// Backend has no /api/continents endpoint and Country DTOs don't expose continent IDs,
+// so these constants are the contract between frontend and the seeded continent rows.
+export const CONTINENT_IDS = {
+  Europe: 1,
+  Asia: 2,
+};
+
 export const countriesApi = {
   getAll: (continentIds) => request(`/api/countries${qs({ continentIds })}`),
+  getByContinent: (continentName) => {
+    const id = CONTINENT_IDS[continentName];
+    return request(`/api/countries${qs({ continentIds: id ? [id] : undefined })}`);
+  },
   getList: () => request("/api/countries/list"),
   getById: (id) => request(`/api/countries/${id}`),
   create: (dto) =>

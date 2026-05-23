@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { allCountries } from "../data/allCountries";
-import { quizApi } from "../services/api";
+import { quizApi, countriesApi } from "../services/api";
 import { useAuth } from "../admin/AdminAuthContext";
 import "../styles/quiz.css";
 
@@ -84,6 +84,12 @@ function formatTime(seconds) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+// Normalize a country name to a stable lookup key (case/punctuation tolerant).
+const flagKey = (name) =>
+  (name || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+
 const Quiz = () => {
   const { user } = useAuth();
   const [guessed, setGuessed] = useState(new Set());
@@ -93,6 +99,34 @@ const Quiz = () => {
   const [lastGuessed, setLastGuessed] = useState(null);
   const [mapReady, setMapReady] = useState(false);
   const [bestRecord, setBestRecord] = useState(null);
+  // Backend-supplied flags from /api/countries/list, keyed by normalized name.
+  // Falls back to hardcoded allCountries flag when a name isn't returned by the API.
+  const [apiFlags, setApiFlags] = useState({});
+
+  useEffect(() => {
+    let active = true;
+    countriesApi
+      .getList()
+      .then((list) => {
+        if (!active || !Array.isArray(list)) return;
+        const map = {};
+        list.forEach((c) => {
+          if (c?.name && c?.flagUrl) {
+            map[flagKey(c.name)] = c.flagUrl;
+          }
+        });
+        setApiFlags(map);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const flagFor = useCallback(
+    (country) => apiFlags[flagKey(country.name)] || country.flag,
+    [apiFlags]
+  );
 
   useEffect(() => {
     if (!user?.id) return;
@@ -343,6 +377,14 @@ const Quiz = () => {
               You have <strong>15 minutes</strong> to name as many countries as
               you can. Type the country name in English.
             </p>
+            {user?.id && bestRecord && (
+              <p className="quiz-best-record">
+                <i className="fas fa-trophy"></i> Your best:{" "}
+                <strong>{bestRecord.maxCountriesGuessed}</strong> /{" "}
+                {totalCount} in{" "}
+                <strong>{formatTime(bestRecord.bestTimeSeconds)}</strong>
+              </p>
+            )}
             <button className="quiz-btn quiz-btn-start" onClick={startGame}>
               <i className="fas fa-play"></i> Start Quiz
             </button>
@@ -403,6 +445,14 @@ const Quiz = () => {
                     {formatTime(TOTAL_TIME - timeLeft)}
                   </p>
                 )}
+                {user?.id && bestRecord && (
+                  <p className="quiz-best-record">
+                    <i className="fas fa-trophy"></i> Personal best:{" "}
+                    <strong>{bestRecord.maxCountriesGuessed}</strong> /{" "}
+                    {totalCount} in{" "}
+                    <strong>{formatTime(bestRecord.bestTimeSeconds)}</strong>
+                  </p>
+                )}
                 <button className="quiz-btn quiz-btn-start" onClick={startGame}>
                   <i className="fas fa-redo"></i> Play Again
                 </button>
@@ -439,7 +489,7 @@ const Quiz = () => {
                       >
                         {isGuessed || isEnded ? (
                           <>
-                            <img src={c.flag} alt="" className="quiz-flag" />
+                            <img src={flagFor(c)} alt="" className="quiz-flag" />
                             <span>{c.name}</span>
                           </>
                         ) : (

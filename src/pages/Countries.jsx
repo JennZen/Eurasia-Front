@@ -7,8 +7,14 @@ import "../styles/countries.css";
 
 const parsePopulation = (str) => {
   if (typeof str === "number") return str;
-  const num = parseFloat(String(str || "").replace(/,/g, ""));
-  return isNaN(num) ? 0 : num;
+  const raw = String(str || "").trim().replace(/,/g, "");
+  const match = raw.match(/^([\d.]+)\s*([KMB]?)/i);
+  if (!match) return 0;
+  const num = parseFloat(match[1]);
+  if (isNaN(num)) return 0;
+  const suffix = match[2].toUpperCase();
+  const multiplier = suffix === "B" ? 1_000_000_000 : suffix === "M" ? 1_000_000 : suffix === "K" ? 1_000 : 1;
+  return num * multiplier;
 };
 
 const parseArea = (str) => {

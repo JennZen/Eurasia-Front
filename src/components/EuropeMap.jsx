@@ -46,6 +46,8 @@ const EuropeMap = () => {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const geoLayerRef = useRef(null);
+  const geoDataRef = useRef(null);
+  const continentBoundsRef = useRef(null);
   const [colorMode, setColorMode] = useState("heat");
   const colorModeRef = useRef(colorMode);
   const [countryHistory, setCountryHistory] = useState([]);
@@ -166,21 +168,64 @@ const EuropeMap = () => {
   };
 
   const flyToCountry = (countryName, center) => {
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.flyTo(center, 5);
+    const map = mapInstanceRef.current;
+    const geoLayer = geoLayerRef.current;
+    if (!map) return;
 
-      fetch("/src/data/europe.geojson")
-        .then((r) => r.json())
-        .then((data) => {
-          const feature = data.features.find(
-            (f) => f.properties.NAME === countryName,
-          );
-          if (feature) {
-            addCountryToHistory(feature);
-            openCountryPopup(feature, center);
-          }
-        });
+    map.closePopup();
+
+    // Find the country's polygon layer — its bounds are the source of truth for
+    // both the destination and the popup anchor. Using the polygon means we
+    // never fly into a spot where the country isn't actually drawn.
+    let targetLayer = null;
+    let targetFeature = null;
+    if (geoLayer) {
+      geoLayer.eachLayer((layer) => {
+        if (!targetLayer && layer.feature?.properties?.NAME === countryName) {
+          targetLayer = layer;
+          targetFeature = layer.feature;
+        }
+      });
     }
+
+    const finish = (latlng) => {
+      if (targetFeature) {
+        addCountryToHistory(targetFeature);
+        openCountryPopup(targetFeature, latlng);
+      }
+    };
+
+    if (targetLayer) {
+      const layerBounds = targetLayer.getBounds();
+      const anchor = layerBounds.getCenter();
+      // flyToBounds frames the whole country with a small padding — every
+      // neighbouring polygon stays in view and painted.
+      map.flyToBounds(layerBounds, {
+        padding: [40, 40],
+        maxZoom: 6,
+        duration: 1.2,
+        easeLinearity: 0.25,
+      });
+      map.once("moveend", () => finish(anchor));
+      return;
+    }
+
+    // Fallback: no polygon in our continent geojson — clamp the fallback centre
+    // to continent bounds so we still stay in painted territory.
+    const cBounds = continentBoundsRef.current;
+    let targetLatLng = L.latLng(center[0], center[1]);
+    if (cBounds && !cBounds.contains(targetLatLng)) {
+      targetLatLng = L.latLng(
+        Math.min(Math.max(targetLatLng.lat, cBounds.getSouth()), cBounds.getNorth()),
+        Math.min(Math.max(targetLatLng.lng, cBounds.getWest()), cBounds.getEast()),
+      );
+    }
+    map.flyTo(targetLatLng, 5, {
+      animate: true,
+      duration: 1.2,
+      easeLinearity: 0.25,
+    });
+    map.once("moveend", () => finish(targetLatLng));
   };
 
   const openCountryPopup = (feature, latlng) => {
@@ -204,7 +249,22 @@ const EuropeMap = () => {
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
-    const map = L.map(mapRef.current).setView([54, 15], 4);
+    // SVG renderer (Leaflet's default) keeps every country polygon painted as a
+    // separate element — it doesn't get repainted on pan/zoom, so colours stay
+    // visible during motion. Canvas was tried and caused a noticeable
+    // "uncoloured flash" because Leaflet redraws the whole canvas per frame.
+    //
+    // The SVG renderer only paints polygons inside a "padding" buffer around the
+    // current viewport (default 0.1 = 10%). While dragging, the freshly exposed
+    // edge of the map falls outside that buffer and shows up blank/uncoloured —
+    // Leaflet only re-renders the SVG on `moveend` (when you release the cursor).
+    // Bumping the padding to 2 pre-renders an area ~2x the viewport on every side,
+    // so the colours stay painted throughout the drag instead of after it.
+    const map = L.map(mapRef.current, {
+      zoomAnimation: true,
+      fadeAnimation: false,
+      renderer: L.svg({ padding: 2 }),
+    }).setView([54, 15], 4);
 
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
@@ -221,6 +281,7 @@ const EuropeMap = () => {
     fetch("/src/data/europe.geojson")
       .then((r) => r.json())
       .then((data) => {
+        geoDataRef.current = data;
         const geoLayer = L.geoJSON(data, {
           style: (f) => ({
             fillColor: getCountryFill(f),
@@ -254,6 +315,21 @@ const EuropeMap = () => {
         }).addTo(map);
 
         geoLayerRef.current = geoLayer;
+
+        // Lock the map to the continent so flyTo / pan / scroll-zoom can't drift
+        // into territory that has no painted features (Asia, Africa, ocean).
+        const bounds = geoLayer.getBounds();
+        if (bounds.isValid()) {
+          const padded = bounds.pad(0.08);
+          continentBoundsRef.current = padded;
+          map.setMaxBounds(padded);
+          const fitZoom = map.getBoundsZoom(padded);
+          map.setMinZoom(fitZoom);
+          // Snap to the continent immediately — every painted country is in view
+          // from frame one, so the user never sees the half-rendered default
+          // [54, 15] zoom-4 viewport.
+          map.fitBounds(padded, { animate: false });
+        }
       });
 
     return () => {

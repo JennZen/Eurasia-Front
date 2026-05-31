@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { asiaRegions as fallbackAsiaRegions, asiaRegionColors } from "../data/asiaRegions";
+import {
+  asiaRegions as fallbackAsiaRegions,
+  asiaRegionColors,
+} from "../data/asiaRegions";
 import { countriesApi } from "../services/api";
 
 const buildAsiaRegionsFromApi = (apiCountries) => {
@@ -9,25 +12,26 @@ const buildAsiaRegionsFromApi = (apiCountries) => {
   Object.values(fallbackAsiaRegions).forEach((list) =>
     list.forEach((c) => {
       staticByName[c.name] = c;
-    })
+    }),
   );
 
   const grouped = {};
   // Server already filtered by continentIds=Asia — no need to re-check c.continents.
   apiCountries.forEach((c) => {
-      const region = Array.isArray(c.regions) && c.regions.length
+    const region =
+      Array.isArray(c.regions) && c.regions.length
         ? String(c.regions[0]).toLowerCase()
         : null;
-      if (!region) return;
-      const fallback = staticByName[c.name];
-      const entry = {
-        name: c.name,
-        center: fallback?.center || [30, 80],
-        flag: c.flagUrl || fallback?.flag || "",
-      };
-      if (!grouped[region]) grouped[region] = [];
-      grouped[region].push(entry);
-    });
+    if (!region) return;
+    const fallback = staticByName[c.name];
+    const entry = {
+      name: c.name,
+      center: fallback?.center || [30, 80],
+      flag: c.flagUrl || fallback?.flag || "",
+    };
+    if (!grouped[region]) grouped[region] = [];
+    grouped[region].push(entry);
+  });
   return grouped;
 };
 
@@ -45,6 +49,8 @@ const AsiaMap = () => {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const geoLayerRef = useRef(null);
+  const geoDataRef = useRef(null);
+  const continentBoundsRef = useRef(null);
   const [colorMode, setColorMode] = useState("heat");
   const colorModeRef = useRef(colorMode);
   const [countryHistory, setCountryHistory] = useState([]);
@@ -54,8 +60,11 @@ const AsiaMap = () => {
   const [apiRegions, setApiRegions] = useState(null);
 
   const asiaRegions = useMemo(
-    () => (apiRegions && Object.keys(apiRegions).length ? apiRegions : fallbackAsiaRegions),
-    [apiRegions]
+    () =>
+      apiRegions && Object.keys(apiRegions).length
+        ? apiRegions
+        : fallbackAsiaRegions,
+    [apiRegions],
   );
 
   useEffect(() => {
@@ -168,21 +177,63 @@ const AsiaMap = () => {
   };
 
   const flyToCountry = (countryName, center) => {
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.flyTo(center, 5);
+    const map = mapInstanceRef.current;
+    const geoLayer = geoLayerRef.current;
+    if (!map) return;
 
-      fetch("/src/data/asia.geojson")
-        .then((r) => r.json())
-        .then((data) => {
-          const feature = data.features.find(
-            (f) => f.properties.NAME === countryName,
-          );
-          if (feature) {
-            addCountryToHistory(feature);
-            openCountryPopup(feature, center);
-          }
-        });
+    map.closePopup();
+
+    let targetLayer = null;
+    let targetFeature = null;
+    if (geoLayer) {
+      geoLayer.eachLayer((layer) => {
+        if (!targetLayer && layer.feature?.properties?.NAME === countryName) {
+          targetLayer = layer;
+          targetFeature = layer.feature;
+        }
+      });
     }
+
+    const finish = (latlng) => {
+      if (targetFeature) {
+        addCountryToHistory(targetFeature);
+        openCountryPopup(targetFeature, latlng);
+      }
+    };
+
+    if (targetLayer) {
+      const layerBounds = targetLayer.getBounds();
+      const anchor = layerBounds.getCenter();
+      map.flyToBounds(layerBounds, {
+        padding: [40, 40],
+        maxZoom: 6,
+        duration: 1.2,
+        easeLinearity: 0.25,
+      });
+      map.once("moveend", () => finish(anchor));
+      return;
+    }
+
+    const cBounds = continentBoundsRef.current;
+    let targetLatLng = L.latLng(center[0], center[1]);
+    if (cBounds && !cBounds.contains(targetLatLng)) {
+      targetLatLng = L.latLng(
+        Math.min(
+          Math.max(targetLatLng.lat, cBounds.getSouth()),
+          cBounds.getNorth(),
+        ),
+        Math.min(
+          Math.max(targetLatLng.lng, cBounds.getWest()),
+          cBounds.getEast(),
+        ),
+      );
+    }
+    map.flyTo(targetLatLng, 5, {
+      animate: true,
+      duration: 1.2,
+      easeLinearity: 0.25,
+    });
+    map.once("moveend", () => finish(targetLatLng));
   };
 
   const openCountryPopup = (feature, latlng) => {
@@ -197,7 +248,7 @@ const AsiaMap = () => {
           <div class="country-popup-actions">
             <a href="/country/${slug}" class="country-popup-btn">Read more about ${NAME}</a>
           </div>
-        </div>`
+        </div>`,
       )
       .openOn(mapInstanceRef.current);
   };
@@ -205,7 +256,11 @@ const AsiaMap = () => {
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
-    const map = L.map(mapRef.current).setView([30, 80], 3);
+    const map = L.map(mapRef.current, {
+      zoomAnimation: true,
+      fadeAnimation: false,
+      renderer: L.svg({ padding: 2 }),
+    }).setView([30, 80], 3);
 
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
@@ -221,6 +276,7 @@ const AsiaMap = () => {
     fetch("/src/data/asia.geojson")
       .then((r) => r.json())
       .then((data) => {
+        geoDataRef.current = data;
         const geoLayer = L.geoJSON(data, {
           style: (f) => ({
             fillColor: getCountryFill(f),
@@ -254,6 +310,20 @@ const AsiaMap = () => {
         }).addTo(map);
 
         geoLayerRef.current = geoLayer;
+
+        // Lock the map to the continent so flyTo / pan / scroll-zoom can't drift
+        // into territory that has no painted features.
+        const bounds = geoLayer.getBounds();
+        if (bounds.isValid()) {
+          const padded = bounds.pad(0.08);
+          continentBoundsRef.current = padded;
+          map.setMaxBounds(padded);
+          const fitZoom = map.getBoundsZoom(padded);
+          map.setMinZoom(fitZoom);
+          // Snap to the continent right away so all coloured polygons are in
+          // the initial frame — no half-rendered default viewport flash.
+          map.fitBounds(padded, { animate: false });
+        }
       });
 
     return () => {
@@ -305,7 +375,9 @@ const AsiaMap = () => {
 
         <div className="map" ref={mapRef} id="asia-map"></div>
 
-        <div className={`map-section ${activeRegionButton ? "has-active-region" : ""}`}>
+        <div
+          className={`map-section ${activeRegionButton ? "has-active-region" : ""}`}
+        >
           {activeRegionButton ? (
             <>
               <button
@@ -342,9 +414,7 @@ const AsiaMap = () => {
                 onClick={() => toggleRegion(regionKey)}
                 className="region-btn"
               >
-                <span className="btn-text">
-                  {prettifyRegionKey(regionKey)}
-                </span>
+                <span className="btn-text">{prettifyRegionKey(regionKey)}</span>
                 <i
                   className="fas fa-arrow-up arrow-icon"
                   style={{ transform: "rotate(0deg)" }}
@@ -361,7 +431,10 @@ const AsiaMap = () => {
           className={`mode-btn ${colorMode === "heat" ? "active" : ""}`}
           onClick={() => {
             setColorMode("heat");
-            mapContainerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+            mapContainerRef.current?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
           }}
         >
           Heat
@@ -370,13 +443,15 @@ const AsiaMap = () => {
           className={`mode-btn ${colorMode === "region" ? "active" : ""}`}
           onClick={() => {
             setColorMode("region");
-            mapContainerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+            mapContainerRef.current?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
           }}
         >
           Groups
         </button>
       </div>
-
     </div>
   );
 };

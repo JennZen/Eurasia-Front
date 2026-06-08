@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "../styles/latest-news.css";
 import { Link } from "react-router-dom";
-import newsFallback from "../data/latestNewsData";
 import { newsApi } from "../services/api";
 
 const formatTime = (iso) => {
@@ -24,8 +23,7 @@ const normalize = (item) => ({
 });
 
 const LatestNews = () => {
-  const [items, setItems] = useState(() => newsFallback.map(normalize));
-  const [source, setSource] = useState("local");
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     let active = true;
@@ -34,9 +32,8 @@ const LatestNews = () => {
         const data = await newsApi.getAll();
         if (!active || !Array.isArray(data)) return;
         setItems(data.map(normalize));
-        setSource("live");
       } catch {
-        /* keep fallback */
+        /* backend unreachable — section stays hidden */
       }
     })();
     return () => {
@@ -117,11 +114,6 @@ const LatestNews = () => {
             </Link>
           ))}
         </div>
-        {source === "local" && (
-          <p style={{ textAlign: "center", opacity: 0.5, fontSize: 12, marginTop: 8 }}>
-            Showing offline news (backend unreachable)
-          </p>
-        )}
       </div>
     </section>
   );

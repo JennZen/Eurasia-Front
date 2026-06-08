@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import newsFallback from "../data/latestNewsData";
 import { newsApi } from "../services/api";
 import "../styles/latest-news.css";
 
@@ -29,7 +28,7 @@ const LatestNewsPage = () => {
   const navigate = useNavigate();
   const state = location.state || {};
 
-  const [items, setItems] = useState(() => newsFallback.map(normalize));
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     let active = true;
@@ -39,7 +38,7 @@ const LatestNewsPage = () => {
         if (!active || !Array.isArray(data)) return;
         setItems(data.map(normalize));
       } catch {
-        /* keep fallback */
+        /* backend unreachable — page renders nothing */
       }
     })();
     return () => {

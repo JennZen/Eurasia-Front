@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { attractions as fallbackAttractions } from "../data/attractions";
-import { allCountries } from "../data/allCountries";
 import { attractionsApi, countriesApi, newsApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
 import "../styles/CountryPage.css";
@@ -49,10 +47,10 @@ const CountryPage = () => {
           const detail = await countriesApi.getById(found.id);
           if (active && detail) setApiCountry(detail);
         } catch {
-          /* keep list-DTO; summary will fall back to hardcoded facts */
+          /* keep list-DTO; summary section is simply omitted */
         }
       } catch {
-        /* keep fallback */
+        /* backend unreachable — page renders minimal header */
       }
     })();
     (async () => {
@@ -61,7 +59,7 @@ const CountryPage = () => {
         if (!active || !Array.isArray(all)) return;
         setApiAttractions(all);
       } catch {
-        /* keep fallback */
+        if (active) setApiAttractions([]);
       }
     })();
     (async () => {
@@ -80,31 +78,30 @@ const CountryPage = () => {
     };
   }, [countryKey]);
 
-  const fallbackCountry = allCountries.find((c) => c.name.toLowerCase() === countryKey);
-  const name = apiCountry?.name || fallbackCountry?.name || (countryKey.charAt(0).toUpperCase() + countryKey.slice(1));
+  const name = apiCountry?.name || (countryKey.charAt(0).toUpperCase() + countryKey.slice(1));
 
-  const heroImage = apiCountry?.backgroundUrl || fallbackCountry?.background || apiCountry?.flagUrl || fallbackCountry?.flag || "https://via.placeholder.com/1600x800/cccccc/000000?text=Country";
-  const heroDescription = apiCountry?.formalName || fallbackCountry?.description || `Explore ${name}.`;
-  const flagImage = apiCountry?.flagUrl || fallbackCountry?.flag || "";
+  const heroImage = apiCountry?.backgroundUrl || apiCountry?.flagUrl || "https://via.placeholder.com/1600x800/cccccc/000000?text=Country";
+  const heroDescription = apiCountry?.formalName || `Explore ${name}.`;
+  const flagImage = apiCountry?.flagUrl || "";
 
-  const countryAttractions = apiAttractions
-    ? apiAttractions.filter((a) => (a.countryName || "").toLowerCase() === countryKey).map((a) => ({
-        id: a.id,
-        name: a.name,
-        image: a.imageUrl,
-        description: a.description,
-        country: (a.countryName || "").toLowerCase(),
-      }))
-    : fallbackAttractions.filter((item) => item.country === countryKey);
+  const countryAttractions = (apiAttractions || [])
+    .filter((a) => (a.countryName || "").toLowerCase() === countryKey)
+    .map((a) => ({
+      id: a.id,
+      name: a.name,
+      image: a.imageUrl,
+      description: a.description,
+      country: (a.countryName || "").toLowerCase(),
+    }));
 
   const fmtNumber = (n) => (typeof n === "number" ? n.toLocaleString() : n || "—");
 
   const generalInfo = [
-    { icon: "fa-landmark", label: "Capital", value: apiCountry?.capital || fallbackCountry?.capital || "—" },
+    { icon: "fa-landmark", label: "Capital", value: apiCountry?.capital || "—" },
     {
       icon: "fa-map-marker-alt",
       label: "Region",
-      value: (apiCountry?.regions?.[0]) || fallbackCountry?.region || "—",
+      value: (apiCountry?.regions?.[0]) || "—",
     },
     {
       icon: "fa-language",
@@ -115,21 +112,13 @@ const CountryPage = () => {
     {
       icon: "fa-globe",
       label: "Geographical size",
-      value: apiCountry ? `${fmtNumber(apiCountry.geographicalSize)} km²` : fallbackCountry?.area || "—",
+      value: apiCountry ? `${fmtNumber(apiCountry.geographicalSize)} km²` : "—",
     },
     {
       icon: "fa-users",
       label: "Population",
-      value: apiCountry ? fmtNumber(apiCountry.population) : fallbackCountry?.population || "—",
+      value: apiCountry ? fmtNumber(apiCountry.population) : "—",
     },
-  ];
-
-  const interestingFacts = [
-    "Austria is home to the world's oldest zoo, Tiergarten Schönbrunn, founded in 1752.",
-    "The country has more than 8,000 lakes, making it a paradise for water sports enthusiasts.",
-    "Austria produces some of the finest wines in the world, with vineyards dating back to Roman times.",
-    "The Vienna Philharmonic Orchestra is one of the world's most prestigious musical ensembles.",
-    "Austria has hosted the Eurovision Song Contest twice, in 1967 and 2015.",
   ];
 
   const attractionsList = countryAttractions;
@@ -180,23 +169,17 @@ const CountryPage = () => {
             </div>
           ))}
         </div>
-        <div className="interesting-facts">
-          <h3>Interesting Facts</h3>
-          {apiCountry?.summary ? (
-            // Backend stores Summary as HTML (rich-text editor in admin panel),
-            // so we render it as-is. Trusted source: only Admin role can write this field.
+        {apiCountry?.summary && (
+          <div className="interesting-facts">
+            <h3>Interesting Facts</h3>
+            {/* Backend stores Summary as HTML (rich-text editor in admin panel),
+                so we render it as-is. Trusted source: only Admin role can write this field. */}
             <div
               className="interesting-facts-content"
               dangerouslySetInnerHTML={{ __html: apiCountry.summary }}
             />
-          ) : (
-            <ul>
-              {interestingFacts.map((fact, index) => (
-                <li key={index}>{fact}</li>
-              ))}
-            </ul>
-          )}
-        </div>
+          </div>
+        )}
       </section>
 
       <section className="country-attractions" id="attractions">

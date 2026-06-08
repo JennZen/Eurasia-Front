@@ -1,26 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { allCountries } from "../data/allCountries";
 import { quizApi, countriesApi } from "../services/api";
 import { useAuth } from "../admin/AdminAuthContext";
 import "../styles/quiz.css";
 
 const TOTAL_TIME = 15 * 60;
-
-const quizCountries = allCountries.map((c) => ({
-  name: c.name,
-  continent: c.continent,
-  region: c.region,
-  flag: c.flag,
-}));
-
-const totalCount = quizCountries.length;
-
-const nameLookup = {};
-quizCountries.forEach((c) => {
-  nameLookup[c.name.toLowerCase()] = c.name;
-});
 
 const aliases = {
   uk: "United Kingdom",
@@ -40,12 +25,8 @@ const aliases = {
   "north macedonia": "North Macedonia",
   "macedonia": "North Macedonia",
 };
-Object.entries(aliases).forEach(([alias, en]) => {
-  nameLookup[alias.toLowerCase()] = en;
-});
 
 // GeoJSON names not present in our quiz data — skip them
-const quizNameSet = new Set(quizCountries.map((c) => c.name));
 const geoExclusions = new Set([
   "Holy See (Vatican City)",
   "San Marino",
@@ -64,13 +45,6 @@ const geoNameMap = {
   "The former Yugoslav Republic of Macedonia": "North Macedonia",
 };
 
-const resolveGeoName = (geoName) => {
-  if (geoExclusions.has(geoName)) return null;
-  if (geoNameMap[geoName]) return geoNameMap[geoName];
-  if (quizNameSet.has(geoName)) return geoName;
-  return null;
-};
-
 const DEFAULT_STYLE = {
   fillColor: "transparent",
   fillOpacity: 0,
@@ -84,12 +58,6 @@ function formatTime(seconds) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-// Normalize a country name to a stable lookup key (case/punctuation tolerant).
-const flagKey = (name) =>
-  (name || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "");
-
 const Quiz = () => {
   const { user } = useAuth();
   const [guessed, setGuessed] = useState(new Set());
@@ -99,23 +67,25 @@ const Quiz = () => {
   const [lastGuessed, setLastGuessed] = useState(null);
   const [mapReady, setMapReady] = useState(false);
   const [bestRecord, setBestRecord] = useState(null);
-  // Backend-supplied flags from /api/countries/list, keyed by normalized name.
-  // Falls back to hardcoded allCountries flag when a name isn't returned by the API.
-  const [apiFlags, setApiFlags] = useState({});
+  // Backend-supplied quiz dataset: name, continent and flag per country.
+  const [quizCountries, setQuizCountries] = useState([]);
 
   useEffect(() => {
     let active = true;
     countriesApi
-      .getList()
+      .getAll()
       .then((list) => {
         if (!active || !Array.isArray(list)) return;
-        const map = {};
-        list.forEach((c) => {
-          if (c?.name && c?.flagUrl) {
-            map[flagKey(c.name)] = c.flagUrl;
-          }
-        });
-        setApiFlags(map);
+        setQuizCountries(
+          list.map((c) => ({
+            name: c.name,
+            continent:
+              Array.isArray(c.continents) && c.continents.length
+                ? c.continents[0]
+                : c.continent || "",
+            flag: c.flagUrl || "",
+          }))
+        );
       })
       .catch(() => {});
     return () => {
@@ -123,10 +93,31 @@ const Quiz = () => {
     };
   }, []);
 
-  const flagFor = useCallback(
-    (country) => apiFlags[flagKey(country.name)] || country.flag,
-    [apiFlags]
-  );
+  const totalCount = quizCountries.length;
+
+  const nameLookup = useMemo(() => {
+    const map = {};
+    quizCountries.forEach((c) => {
+      map[c.name.toLowerCase()] = c.name;
+    });
+    Object.entries(aliases).forEach(([alias, en]) => {
+      if (map[en.toLowerCase()]) map[alias.toLowerCase()] = en;
+    });
+    return map;
+  }, [quizCountries]);
+
+  // resolveGeoName is called from Leaflet callbacks created in initMap (stable
+  // closure), so the quiz-name set lives in a ref to stay current.
+  const quizNameSetRef = useRef(new Set());
+  useEffect(() => {
+    quizNameSetRef.current = new Set(quizCountries.map((c) => c.name));
+  }, [quizCountries]);
+
+  const resolveGeoName = useCallback((geoName) => {
+    if (geoExclusions.has(geoName)) return null;
+    const mapped = geoNameMap[geoName] || geoName;
+    return quizNameSetRef.current.has(mapped) ? mapped : null;
+  }, []);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -170,7 +161,7 @@ const Quiz = () => {
         .then((r) => setBestRecord(r))
         .catch(() => {});
     }
-  }, [stopTimer, user?.id]);
+  }, [stopTimer, user?.id, totalCount]);
 
   useEffect(() => {
     if (gameStatus === "playing" && timeLeft <= 0) endGame();
@@ -190,8 +181,9 @@ const Quiz = () => {
   }, [gameStatus, stopTimer]);
 
   useEffect(() => {
-    if (gameStatus === "playing" && guessed.size === totalCount) endGame();
-  }, [guessed, gameStatus, endGame]);
+    if (gameStatus === "playing" && totalCount > 0 && guessed.size === totalCount)
+      endGame();
+  }, [guessed, gameStatus, endGame, totalCount]);
 
   // Initialize map only once the game has started (div is visible)
   const initMap = useCallback(() => {
@@ -255,7 +247,7 @@ const Quiz = () => {
       loadGeo("/src/data/europe.geojson"),
       loadGeo("/src/data/asia.geojson"),
     ]).then(() => setMapReady(true));
-  }, []);
+  }, [resolveGeoName]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -385,8 +377,13 @@ const Quiz = () => {
                 <strong>{formatTime(bestRecord.bestTimeSeconds)}</strong>
               </p>
             )}
-            <button className="quiz-btn quiz-btn-start" onClick={startGame}>
-              <i className="fas fa-play"></i> Start Quiz
+            <button
+              className="quiz-btn quiz-btn-start"
+              onClick={startGame}
+              disabled={totalCount === 0}
+            >
+              <i className="fas fa-play"></i>{" "}
+              {totalCount === 0 ? "Loading countries…" : "Start Quiz"}
             </button>
           </div>
         )}
@@ -489,7 +486,7 @@ const Quiz = () => {
                       >
                         {isGuessed || isEnded ? (
                           <>
-                            <img src={flagFor(c)} alt="" className="quiz-flag" />
+                            <img src={c.flag} alt="" className="quiz-flag" />
                             <span>{c.name}</span>
                           </>
                         ) : (

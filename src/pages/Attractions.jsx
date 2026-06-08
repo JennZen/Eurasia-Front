@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { attractions as fallbackAttractions } from "../data/attractions";
 import { attractionsApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
 import "../styles/Attractions.css";
@@ -26,7 +25,7 @@ const normalizeAttraction = (a) => ({
 const Attractions = () => {
   const [query, setQuery] = useState("");
   const [country, setCountry] = useState("All");
-  const [attractions, setAttractions] = useState(() => fallbackAttractions.map(normalizeAttraction));
+  const [attractions, setAttractions] = useState([]);
   const { isLiked, toggleLike } = useLikes({ countries: false });
 
   useEffect(() => {
@@ -37,7 +36,7 @@ const Attractions = () => {
         if (!active || !Array.isArray(data)) return;
         setAttractions(data.map(normalizeAttraction));
       } catch {
-        /* keep fallback */
+        /* backend unreachable — catalog stays empty */
       }
     })();
     return () => {

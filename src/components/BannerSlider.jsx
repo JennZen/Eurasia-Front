@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { banners as fallbackBanners } from "../data/banners";
 import { bannersApi } from "../services/api";
 
 // Backend returns Population/Territory as raw numeric strings (e.g. "1430000000", "9596961").
-// Convert to a "X.XX Mil" / "X.XX Bil" representation, leaving non-numeric strings untouched
-// (the seed banners.js already uses display-formatted strings).
+// Convert to a "X.XX Mil" / "X.XX Bil" representation, leaving non-numeric strings untouched.
 const formatMillions = (value, { unit = "" } = {}) => {
   if (value === null || value === undefined || value === "") return "";
   const num = typeof value === "number" ? value : Number(String(value).replace(/[^\d.-]/g, ""));
@@ -29,7 +27,7 @@ const normalize = (b) => ({
 });
 
 const BannerSlider = () => {
-  const [banners, setBanners] = useState(() => fallbackBanners.map(normalize));
+  const [banners, setBanners] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progress, setProgress] = useState(0);
   const slideDuration = 4000;
@@ -40,9 +38,9 @@ const BannerSlider = () => {
       try {
         const data = await bannersApi.getAll(4);
         if (!active || !Array.isArray(data)) return;
-        setBanners(data.length === 0 ? [] : data.map(normalize));
+        setBanners(data.map(normalize));
       } catch {
-        /* keep fallback */
+        /* backend unreachable — slider stays hidden */
       }
     })();
     return () => {

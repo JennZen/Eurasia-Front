@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { allCountries as fallbackCountries } from "../data/allCountries";
 import { countriesApi, CONTINENT_IDS } from "../services/api";
 import { Link } from "react-router-dom";
 import "../styles/country-list.css";
@@ -36,11 +35,8 @@ const normalize = (c) => {
 };
 
 const CountryList = ({ continent }) => {
-  // Fallback dataset is filtered by continent name; once the API responds we replace it
-  // with the server-filtered list (already restricted to this continent via continentIds).
-  const [allItems, setAllItems] = useState(() =>
-    fallbackCountries.map(normalize).filter((c) => c.continent === continent)
-  );
+  // Server-filtered list — already restricted to this continent via continentIds.
+  const [allItems, setAllItems] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("All");
   const [page, setPage] = useState(1);
@@ -57,7 +53,7 @@ const CountryList = ({ continent }) => {
         if (!active || !Array.isArray(data)) return;
         setAllItems(data.map(normalize));
       } catch {
-        /* keep fallback */
+        /* backend unreachable — list stays empty */
       }
     })();
     return () => {

@@ -1,20 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import {
-  asiaRegions as fallbackAsiaRegions,
-  asiaRegionColors,
-} from "../data/asiaRegions";
 import { countriesApi } from "../services/api";
 
-const buildAsiaRegionsFromApi = (apiCountries) => {
-  const staticByName = {};
-  Object.values(fallbackAsiaRegions).forEach((list) =>
-    list.forEach((c) => {
-      staticByName[c.name] = c;
-    }),
-  );
+const asiaRegionColors = {
+  eastern: "#4FC3F7",
+  southeastern: "#81C784",
+  southern: "#FFB74D",
+  central: "#BA68C8",
+  western: "#E57373",
+};
 
+const buildAsiaRegionsFromApi = (apiCountries) => {
   const grouped = {};
   // Server already filtered by continentIds=Asia — no need to re-check c.continents.
   apiCountries.forEach((c) => {
@@ -23,11 +20,12 @@ const buildAsiaRegionsFromApi = (apiCountries) => {
         ? String(c.regions[0]).toLowerCase()
         : null;
     if (!region) return;
-    const fallback = staticByName[c.name];
     const entry = {
       name: c.name,
-      center: fallback?.center || [30, 80],
-      flag: c.flagUrl || fallback?.flag || "",
+      // DTO has no lat/lng — flyToCountry resolves the real polygon bounds;
+      // this is only the last-resort anchor when no polygon exists.
+      center: [30, 80],
+      flag: c.flagUrl || "",
     };
     if (!grouped[region]) grouped[region] = [];
     grouped[region].push(entry);
@@ -59,13 +57,7 @@ const AsiaMap = () => {
   const [activeRegionButton, setActiveRegionButton] = useState(null);
   const [apiRegions, setApiRegions] = useState(null);
 
-  const asiaRegions = useMemo(
-    () =>
-      apiRegions && Object.keys(apiRegions).length
-        ? apiRegions
-        : fallbackAsiaRegions,
-    [apiRegions],
-  );
+  const asiaRegions = useMemo(() => apiRegions || {}, [apiRegions]);
 
   useEffect(() => {
     let active = true;
@@ -76,7 +68,7 @@ const AsiaMap = () => {
         const built = buildAsiaRegionsFromApi(data);
         if (Object.keys(built).length) setApiRegions(built);
       } catch {
-        /* keep fallback */
+        /* backend unreachable — region panel stays empty */
       }
     })();
     return () => {

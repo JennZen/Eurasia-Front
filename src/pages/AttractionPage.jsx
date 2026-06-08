@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { attractions as fallbackAttractions } from "../data/attractions";
 import { attractionsApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
 import "../styles/AttractionPage.css";
@@ -30,7 +29,7 @@ const AttractionPage = () => {
   const { country, id } = useParams();
   const attractionId = Number(id);
   const { isLiked, toggleLike } = useLikes({ countries: false });
-  const [allAttractions, setAllAttractions] = useState(() => fallbackAttractions.map(normalizeAttraction));
+  const [allAttractions, setAllAttractions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,10 +37,10 @@ const AttractionPage = () => {
     (async () => {
       try {
         const data = await attractionsApi.getAll();
-        if (!active || !Array.isArray(data) || data.length === 0) return;
+        if (!active || !Array.isArray(data)) return;
         setAllAttractions(data.map(normalizeAttraction));
       } catch {
-        /* keep fallback */
+        /* backend unreachable — "not found" state below */
       } finally {
         if (active) setLoading(false);
       }

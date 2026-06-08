@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { allCountries as fallbackCountries } from "../data/allCountries";
 import { countriesApi } from "../services/api";
 import { useLikes } from "../hooks/useLikes";
 import "../styles/countries.css";
@@ -51,7 +50,7 @@ const normalizeCountry = (c) => {
 
 const Countries = () => {
   const { toggleCountryLike, isCountryLiked } = useLikes({ attractions: false });
-  const [allCountries, setAllCountries] = useState(() => fallbackCountries.map(normalizeCountry));
+  const [allCountries, setAllCountries] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedContinent, setSelectedContinent] = useState("All");
   const [selectedRegion, setSelectedRegion] = useState("All");
@@ -65,7 +64,7 @@ const Countries = () => {
         if (!active || !Array.isArray(data)) return;
         setAllCountries(data.map(normalizeCountry));
       } catch {
-        /* keep fallback */
+        /* backend unreachable — list stays empty */
       }
     })();
     return () => {
